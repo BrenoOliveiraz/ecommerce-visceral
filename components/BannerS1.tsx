@@ -47,7 +47,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   const selectedImages = isMobile ? imagesMD : images;
 
   return (
-    <div ref={sliderRef} className="keen-slider w-screen h-[94vh] mt-1.5 relative overflow-hidden">
+    <div ref={sliderRef} className="keen-slider w-screen h-[94vh]  relative overflow-hidden">
       {selectedImages.map((image, index) => (
         <div key={index} className="keen-slider__slide relative w-full h-full">
           {index === 0 ? (

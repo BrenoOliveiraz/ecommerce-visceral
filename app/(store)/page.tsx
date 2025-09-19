@@ -1,5 +1,6 @@
 
 
+import StoreSection from '@/components/StoreSection';
 import BannerS1 from '../../components/BannerS1'
 
 export default async function Home() {
@@ -22,6 +23,8 @@ export default async function Home() {
           { src: "/banner6MD.png", alt: "Banner 6" }, 
         ]}
       />
+
+      <StoreSection />
       {/* <FastSelector />
       <ProductsView products={products} />
       <BannerS2 />
