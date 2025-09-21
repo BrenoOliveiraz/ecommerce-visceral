@@ -4,7 +4,7 @@ import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
 import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion'; // 👈 importando framer-motion
+import { motion } from 'framer-motion'; 
 
 interface BannerCarouselProps {
   images: { src: string; alt: string }[];
@@ -12,9 +12,9 @@ interface BannerCarouselProps {
 }
 
 const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
-
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [loaded, setLoaded] = useState(false);
 
   const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
     loop: true,
@@ -46,10 +46,10 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   const selectedImages = isMobile ? imagesMD : images;
 
   return (
-    <div ref={sliderRef} className="keen-slider w-screen h-[94vh]  relative overflow-hidden">
+    <div ref={sliderRef} className="keen-slider w-screen h-[94vh] relative overflow-hidden">
       {selectedImages.map((image, index) => (
         <div key={index} className="keen-slider__slide relative w-full h-full">
-          {index === 0 ? (
+          {index === 0 && loaded ? (  // Só anima se carregado
             <motion.div
               initial={{ scale: 1.5 }}
               animate={{ scale: 1 }}
@@ -62,6 +62,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
                 fill
                 className="object-cover"
                 priority
+                onLoadingComplete={() => setLoaded(true)}  // Marca como carregado
               />
             </motion.div>
           ) : (
@@ -71,6 +72,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               fill
               className="object-cover"
               priority
+              onLoadingComplete={() => setLoaded(true)}  // Marca como carregado
             />
           )}
         </div>
