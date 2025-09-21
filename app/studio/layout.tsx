@@ -1,18 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import localFont from "next/font/local"
+import "../globals.css";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
-const visceralFont = localFont({
-  src: "/fonts/DeathCrow.ttf",
-  variable: "--font-visceral",
-  display: "swap",
-})
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
@@ -30,12 +24,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
-      </body>
-    </html>
+    
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          {children}
+        </body>
+      </html>
+
   );
 }

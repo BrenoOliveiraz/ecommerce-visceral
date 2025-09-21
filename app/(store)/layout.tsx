@@ -1,17 +1,11 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
-import { ClerkProvider } from "@clerk/nextjs";
+import { ClerkProvider } from '@clerk/nextjs'
 import Header from "@/components/Header";
+import { SanityLive } from "@/sanity/lib/live";
+
 import WhatsAppButton from "@/components/WhatsAppButton";
-import localFont from "next/font/local";
-
-
-const visceralFont = localFont({
-  src: "../fonts/DEATHCROW.ttf", 
-  variable: "--font-visceral",
-  display: "swap",
-});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,7 +19,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "VISCERAL",
-  description: "EVIL DEAD",
+  description: "LOJA DE ROUPAS",
 };
 
 export default function RootLayout({
@@ -37,7 +31,7 @@ export default function RootLayout({
     <ClerkProvider dynamic>
       <html lang="en">
         <body
-          className={`${geistSans.variable} ${geistMono.variable} ${visceralFont.variable} antialiased`}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <main>
             <Header />
@@ -45,6 +39,9 @@ export default function RootLayout({
           </main>
 
           <WhatsAppButton />
+
+          <SanityLive />
+
         </body>
       </html>
     </ClerkProvider>

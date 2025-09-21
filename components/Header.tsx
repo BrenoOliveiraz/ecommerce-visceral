@@ -1,6 +1,6 @@
 'use client'
 
-import Image from 'next/image'
+
 import Link from 'next/link'
 import { SignInButton, UserButton, useUser } from '@clerk/nextjs'
 import { Search, ShoppingCart, User, HelpCircle } from 'lucide-react'

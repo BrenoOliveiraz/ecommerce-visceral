@@ -3,7 +3,6 @@
 import { useKeenSlider } from 'keen-slider/react';
 import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'framer-motion'; // 👈 importando framer-motion
 
@@ -13,7 +12,7 @@ interface BannerCarouselProps {
 }
 
 const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
-  const router = useRouter();
+
   const timer = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -52,9 +51,9 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
         <div key={index} className="keen-slider__slide relative w-full h-full">
           {index === 0 ? (
             <motion.div
-              initial={{ scale: 1.5 }} 
-              animate={{ scale: 1 }} 
-              transition={{ duration: 2, ease: 'easeOut' }} 
+              initial={{ scale: 1.5 }}
+              animate={{ scale: 1 }}
+              transition={{ duration: 2, ease: 'easeOut' }}
               className="w-full h-full relative"
             >
               <Image

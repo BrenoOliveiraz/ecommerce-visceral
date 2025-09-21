@@ -40,9 +40,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
 
       </div>
 
-      {/* Produtos */}
-      {/* Produtos */}
-      <div className="relative max-w-6xl mx-auto bg-[#1a1a1a] rounded-lg p-4">
+      <div className="relative max-w-6xl mx-auto bg-gray-200 rounded-lg p-4">
         <ProductGrid products={products.slice(0, 5)} />
       </div>
 

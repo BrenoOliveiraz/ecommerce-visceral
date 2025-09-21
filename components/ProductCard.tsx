@@ -34,9 +34,7 @@ export default function ProductCard({ product }: { product: Product }) {
 
       {/* conteúdo */}
       <div className="p-4 text-center flex flex-col gap-2">
-        <p className="text-xs font-semibold uppercase tracking-wide text-red-600">
-          {product.category || "Collection"}
-        </p>
+
         <h2 className="text-sm md:text-base font-semibold text-white min-h-[40px]">
           {product.name}
         </h2>

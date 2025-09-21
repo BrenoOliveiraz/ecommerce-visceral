@@ -1,6 +1,4 @@
 
-
-import StoreSection from '@/components/StoreSection';
 import BannerS1 from '../../components/BannerS1'
 import ProductsView from '@/components/ProductsView';
 import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
