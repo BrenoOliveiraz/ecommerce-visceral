@@ -1,37 +1,34 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 
 interface CollectionCardProps {
-    image: string;
-    title: string;
-    onClick?: () => void; // opcional: permite clique personalizado
+  title: string;
+
+  image: string;
 }
 
-export default function CollectionCard({ image, title, onClick }: CollectionCardProps) {
-    return (
-        <div className="flex flex-col items-center ">
-            <button
-                onClick={onClick}
-                className="w-36 h-36 rounded-full border-4 border-red-600 overflow-hidden flex items-center justify-center transition-transform hover:scale-105 focus:outline-none"
-            >
-                <div className="relative w-full h-full">
+export default function CollectionCard({ title, image }: CollectionCardProps) {
+  return (
+    <div className="group relative flex flex-col items-center text-center p-4 rounded-2xl">
 
-                    <Link href="./">
+      <div className="relative w-28 h-28 md:w-36 md:h-36 rounded-full border-4 overflow-hidden  bg-neutral-950  border-red-700/40 shadow-lg shadow-red-900/20 hover:shadow-red-600/50 hover:scale-105 transition-all duration-300 cursor-pointer">
+        <Image
+          src={image}
+          alt={title}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+        />
+      </div>
 
-                        <Image
-                            src={image}
-                            alt={title}
-                            fill
-                            className="object-cover cursor-pointer"
-                        />
+   
+      <div className="mt-4">
 
-                    </Link>
-
-                </div>
-            </button>
-            <p className="mt-2 font-semibold">{title}</p>
-        </div>
-    );
+        <h3 className="text-lg font-bold text-white mt-1">{title}</h3>
+      </div>
+    </div>
+  );
 }
+
+
+

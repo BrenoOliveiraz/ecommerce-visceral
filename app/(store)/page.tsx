@@ -2,9 +2,11 @@
 
 import StoreSection from '@/components/StoreSection';
 import BannerS1 from '../../components/BannerS1'
+import ProductsView from '@/components/ProductsView';
+import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
 
 export default async function Home() {
-  // const products = await getAllProducts();
+  const products = await getAllProducts();
 
   return (
     <div>
@@ -24,7 +26,8 @@ export default async function Home() {
         ]}
       />
 
-      <StoreSection />
+
+      <ProductsView products={products} />
       {/* <FastSelector />
       <ProductsView products={products} />
       <BannerS2 />
