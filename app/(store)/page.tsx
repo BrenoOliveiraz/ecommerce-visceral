@@ -12,6 +12,7 @@ export default async function Home() {
         images={[
           { src: "/BANNER_ASH.jpg", alt: "BANNER ASH" },
           { src: "/BANNER_LINDA.jpg", alt: "BANNER LINDA" },
+          { src: "/bannerMenina.jpg", alt: "BANNER LINDA 2" },
 
         ]}
         imagesMD={[

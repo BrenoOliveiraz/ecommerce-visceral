@@ -19,8 +19,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
       {/* Coleções */}
       <div className="flex justify-center gap-8 my-12">
         <CollectionCard image="/colection-icon.jpg" title="Evil Dead" />
-        <CollectionCard image="/colection-icon.jpg" title="Halloween" />
-        <CollectionCard image="/colection-icon.jpg" title="Scary Movie" />
+
       </div>
 
       {/* Título */}

@@ -1,10 +1,8 @@
 'use client';
 
-import { useKeenSlider } from 'keen-slider/react';
-import 'keen-slider/keen-slider.min.css';
 import Image from 'next/image';
-import { useEffect, useRef, useState } from 'react';
-import { motion } from 'framer-motion'; 
+import { useEffect, useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface BannerCarouselProps {
   images: { src: string; alt: string }[];
@@ -12,17 +10,10 @@ interface BannerCarouselProps {
 }
 
 const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
-  const timer = useRef<NodeJS.Timeout | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [loaded, setLoaded] = useState(false);
-
-  const [sliderRef, slider] = useKeenSlider<HTMLDivElement>({
-    loop: true,
-    mode: 'snap',
-    slides: {
-      perView: 1,
-    },
-  });
+  const [index, setIndex] = useState(0);
+  const [direction, setDirection] = useState(0); // controla direção da transição
+  const [loaded, setLoaded] = useState(false); // Para controle de animação de carregamento
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -33,50 +24,72 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
     return () => window.removeEventListener('resize', checkIsMobile);
   }, []);
 
-  useEffect(() => {
-    if (!slider) return;
-    timer.current = setInterval(() => {
-      slider.current?.next();
-    }, 6000);
-    return () => {
-      if (timer.current) clearInterval(timer.current);
-    };
-  }, [slider]);
-
   const selectedImages = isMobile ? imagesMD : images;
 
+  // Troca automática a cada 6s
+  useEffect(() => {
+    const interval = setInterval(() => {
+      handleNext();
+    }, 6000);
+    return () => clearInterval(interval);
+  }, [selectedImages.length]);
+
+  const handleNext = () => {
+    setDirection(1);
+    setIndex((prev) => (prev + 1) % selectedImages.length);
+  };
+
+  const handlePrev = () => {
+    setDirection(-1);
+    setIndex((prev) =>
+      prev === 0 ? selectedImages.length - 1 : prev - 1
+    );
+  };
+
   return (
-    <div ref={sliderRef} className="keen-slider w-screen h-[94vh] relative overflow-hidden">
-      {selectedImages.map((image, index) => (
-        <div key={index} className="keen-slider__slide relative w-full h-full">
-          {index === 0 && loaded ? (  // Só anima se carregado
-            <motion.div
-              initial={{ scale: 1.5 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 2, ease: 'easeOut' }}
-              className="w-full h-full relative"
-            >
-              <Image
-                src={image.src}
-                alt={image.alt}
-                fill
-                className="object-cover"
-                priority
-                onLoadingComplete={() => setLoaded(true)}  // Marca como carregado
-              />
-            </motion.div>
-          ) : (
+    <div className="w-screen h-[94vh] relative overflow-hidden">
+      <AnimatePresence initial={false} custom={direction}>
+        <motion.div
+          key={index}
+          custom={direction}
+          initial={{ opacity: 0, scale: 1.05 }} // Começa com opacidade 0 e um leve zoom
+          animate={{ opacity: 1, scale: 1 }} // Torna a imagem opaca e mantém a escala normal
+          exit={{ opacity: 0, scale: 0.95 }} // Sai com uma escala reduzida e opacidade para efeito suave
+          transition={{ duration: 1.2, ease: 'easeInOut' }} // Duração aumentada e transição mais suave
+          className="w-full h-full absolute top-0 left-0"
+        >
+          {/* Animação de carregamento e transição de imagem */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1, ease: 'easeOut' }} // Suaviza a animação de carregamento
+            className="w-full h-full relative"
+          >
             <Image
-              src={image.src}
-              alt={image.alt}
+              src={selectedImages[index].src}
+              alt={selectedImages[index].alt}
               fill
               className="object-cover"
               priority
               onLoadingComplete={() => setLoaded(true)}  // Marca como carregado
             />
-          )}
-        </div>
-      ))}
+          </motion.div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Botões (opcional) */}
+      <button
+        onClick={handlePrev}
+        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
+      >
+        ‹
+      </button>
+      <button
+        onClick={handleNext}
+        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
+      >
+        ›
+      </button>
     </div>
   );
 };
