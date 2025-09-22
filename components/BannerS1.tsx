@@ -15,7 +15,6 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -40,17 +39,9 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
     );
   }, [selectedImages.length]);
 
-  // quando a primeira imagem carregar, solta o loader
-  useEffect(() => {
-    if (imageLoaded) {
-      const timeout = setTimeout(() => setLoading(false), 300); // atraso pra animação ficar smooth
-      return () => clearTimeout(timeout);
-    }
-  }, [imageLoaded]);
-
   return (
     <div className="w-screen h-[90vh] relative overflow-hidden">
-      {/* Loader overlay */}
+      {/* Loader inicial */}
       <AnimatePresence>
         {loading && (
           <motion.div
@@ -66,9 +57,10 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
         )}
       </AnimatePresence>
 
+      {/* Carrossel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
-          key={index}
+          key={index} // mantém animação de troca entre slides
           custom={direction}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -76,12 +68,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
           transition={{ duration: 1, ease: 'easeInOut' }}
           className="w-full h-full absolute top-0 left-0"
         >
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="w-full h-full relative"
-          >
+          <div className="w-full h-full relative">
             <Image
               src={selectedImages[index].src}
               alt={selectedImages[index].alt}
@@ -90,9 +77,12 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               className="object-cover"
               priority={index === 0}
               loading={index <= 1 ? 'eager' : 'lazy'}
-              onLoad={() => setImageLoaded(true)} // ✅ mais confiável que onLoadingComplete
+              onLoad={() => {
+                // só remove o loader na primeira imagem
+                if (loading) setLoading(false);
+              }}
             />
-          </motion.div>
+          </div>
         </motion.div>
       </AnimatePresence>
 
