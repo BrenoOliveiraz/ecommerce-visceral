@@ -51,26 +51,28 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          transition={{ duration: 1.2, ease: 'easeInOut' }}
+          transition={{ duration: 1, ease: 'easeInOut' }}
           className="w-full h-full absolute top-0 left-0"
         >
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, ease: 'easeOut' }}
+            transition={{ duration: 0.8, ease: 'easeOut' }}
             className="w-full h-full relative"
           >
             <Image
               src={selectedImages[index].src}
               alt={selectedImages[index].alt}
               fill
+              sizes="100vw"
               className="object-cover"
-              priority
+              priority={index === 0} // só o primeiro banner tem prioridade
             />
           </motion.div>
         </motion.div>
       </AnimatePresence>
 
+      {/* Botões de navegação */}
       <button
         onClick={handlePrev}
         className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
