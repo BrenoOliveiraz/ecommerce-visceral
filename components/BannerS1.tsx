@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface BannerCarouselProps {
@@ -12,8 +12,7 @@ interface BannerCarouselProps {
 const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const [index, setIndex] = useState(0);
-  const [direction, setDirection] = useState(0); // controla direção da transição
-  const [loaded, setLoaded] = useState(false); // Para controle de animação de carregamento
+  const [direction, setDirection] = useState(0);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -26,25 +25,22 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
 
   const selectedImages = isMobile ? imagesMD : images;
 
-  // Troca automática a cada 6s
-  useEffect(() => {
-    const interval = setInterval(() => {
-      handleNext();
-    }, 6000);
-    return () => clearInterval(interval);
-  }, [selectedImages.length]);
-
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     setDirection(1);
     setIndex((prev) => (prev + 1) % selectedImages.length);
-  };
+  }, [selectedImages.length]);
 
-  const handlePrev = () => {
+  const handlePrev = useCallback(() => {
     setDirection(-1);
     setIndex((prev) =>
       prev === 0 ? selectedImages.length - 1 : prev - 1
     );
-  };
+  }, [selectedImages.length]);
+
+  useEffect(() => {
+    const interval = setInterval(handleNext, 6000);
+    return () => clearInterval(interval);
+  }, [handleNext]);
 
   return (
     <div className="w-screen h-[94vh] relative overflow-hidden">
@@ -52,17 +48,16 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
         <motion.div
           key={index}
           custom={direction}
-          initial={{ opacity: 0, scale: 1.05 }} // Começa com opacidade 0 e um leve zoom
-          animate={{ opacity: 1, scale: 1 }} // Torna a imagem opaca e mantém a escala normal
-          exit={{ opacity: 0, scale: 0.95 }} // Sai com uma escala reduzida e opacidade para efeito suave
-          transition={{ duration: 1.2, ease: 'easeInOut' }} // Duração aumentada e transição mais suave
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 1.2, ease: 'easeInOut' }}
           className="w-full h-full absolute top-0 left-0"
         >
-          {/* Animação de carregamento e transição de imagem */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 1, ease: 'easeOut' }} // Suaviza a animação de carregamento
+            transition={{ duration: 1, ease: 'easeOut' }}
             className="w-full h-full relative"
           >
             <Image
@@ -71,13 +66,11 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               fill
               className="object-cover"
               priority
-              onLoadingComplete={() => setLoaded(true)}  // Marca como carregado
             />
           </motion.div>
         </motion.div>
       </AnimatePresence>
 
-      {/* Botões (opcional) */}
       <button
         onClick={handlePrev}
         className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
