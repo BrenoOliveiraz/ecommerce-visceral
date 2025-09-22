@@ -37,11 +37,6 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
     );
   }, [selectedImages.length]);
 
-  useEffect(() => {
-    const interval = setInterval(handleNext, 6000);
-    return () => clearInterval(interval);
-  }, [handleNext]);
-
   return (
     <div className="w-screen h-[90vh] relative overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
@@ -69,7 +64,6 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               priority={index === 0} // só o primeiro tem prioridade absoluta
               loading={index <= 1 ? "eager" : "lazy"} // 2 primeiros = eager, resto = lazy
             />
-
           </motion.div>
         </motion.div>
       </AnimatePresence>
