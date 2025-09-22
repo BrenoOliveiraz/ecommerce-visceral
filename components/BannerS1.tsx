@@ -61,8 +61,8 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               fill
               sizes="100vw"
               className="object-cover"
-              priority={index === 0} // só o primeiro tem prioridade absoluta
-              loading={index <= 1 ? "eager" : "lazy"} // 2 primeiros = eager, resto = lazy
+              priority={index === 0} 
+              loading={index <= 1 ? "eager" : "lazy"} 
             />
           </motion.div>
         </motion.div>

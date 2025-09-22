@@ -11,8 +11,7 @@ export default async function Home() {
       <BannerS1
         images={[
           { src: "/BANNER_ASH.jpg", alt: "BANNER ASH" },
-          { src: "/BANNER_LINDA.jpg", alt: "BANNER LINDA" },
-          { src: "/bannerMenina.jpg", alt: "BANNER LINDA 2" },
+          { src: "/bannerMenina.jpg", alt: "BANNER LINDA " },
 
         ]}
         imagesMD={[
@@ -21,7 +20,7 @@ export default async function Home() {
           { src: "/banner3MD.jpeg", alt: "Banner 3" },
           { src: "/banner4MD.jpeg", alt: "Banner 4" },
           { src: "/banner5MD.jpeg", alt: "Banner 5" },
-          { src: "/banner6MD.png", alt: "Banner 6" }, 
+          { src: "/banner6MD.png", alt: "Banner 6" },
         ]}
       />
 
