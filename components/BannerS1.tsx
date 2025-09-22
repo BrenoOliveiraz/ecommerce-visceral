@@ -43,7 +43,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   }, [handleNext]);
 
   return (
-    <div className="w-screen h-[94vh] relative overflow-hidden">
+    <div className="w-screen h-[90vh] relative overflow-hidden">
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={index}
