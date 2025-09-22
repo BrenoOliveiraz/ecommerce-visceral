@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useEffect, useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Loader from '@/components/Loader';
 
 interface BannerCarouselProps {
   images: { src: string; alt: string }[];
@@ -13,6 +14,8 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   const [isMobile, setIsMobile] = useState(false);
   const [index, setIndex] = useState(0);
   const [direction, setDirection] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   useEffect(() => {
     const checkIsMobile = () => {
@@ -37,8 +40,32 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
     );
   }, [selectedImages.length]);
 
+  // quando a primeira imagem carregar, solta o loader
+  useEffect(() => {
+    if (imageLoaded) {
+      const timeout = setTimeout(() => setLoading(false), 300); // atraso pra animação ficar smooth
+      return () => clearTimeout(timeout);
+    }
+  }, [imageLoaded]);
+
   return (
     <div className="w-screen h-[90vh] relative overflow-hidden">
+      {/* Loader overlay */}
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.6, ease: 'easeInOut' }}
+            className="absolute inset-0 z-50 flex items-center justify-center bg-black"
+          >
+            <Loader />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
           key={index}
@@ -61,26 +88,31 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               fill
               sizes="100vw"
               className="object-cover"
-              priority={index === 0} 
-              loading={index <= 1 ? "eager" : "lazy"} 
+              priority={index === 0}
+              loading={index <= 1 ? 'eager' : 'lazy'}
+              onLoad={() => setImageLoaded(true)} // ✅ mais confiável que onLoadingComplete
             />
           </motion.div>
         </motion.div>
       </AnimatePresence>
 
       {/* Botões de navegação */}
-      <button
-        onClick={handlePrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
-      >
-        ‹
-      </button>
-      <button
-        onClick={handleNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
-      >
-        ›
-      </button>
+      {!loading && (
+        <>
+          <button
+            onClick={handlePrev}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
+          >
+            ‹
+          </button>
+          <button
+            onClick={handleNext}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 text-white px-3 py-2 rounded-full"
+          >
+            ›
+          </button>
+        </>
+      )}
     </div>
   );
 };
