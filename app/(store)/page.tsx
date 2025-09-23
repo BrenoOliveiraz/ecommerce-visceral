@@ -10,18 +10,15 @@ export default async function Home() {
     <div>
       <BannerS1
         images={[
-          { src: "/b1.jpg", alt: "BANNER ASH" },
-          { src: "/b2.jpg", alt: "BANNER LINDA " },
+          { src: "/bannerDesktop1.jpg", alt: "BANNER ASH" },
+          { src: "/bannerDesktop2.jpg", alt: "BANNER LINDA " },
+        ]}
 
-        ]}
         imagesMD={[
-          { src: "/banner1MD.jpeg", alt: "Banner 1" },
-          { src: "/banner2MD.jpeg", alt: "Banner 2" },
-          { src: "/banner3MD.jpeg", alt: "Banner 3" },
-          { src: "/banner4MD.jpeg", alt: "Banner 4" },
-          { src: "/banner5MD.jpeg", alt: "Banner 5" },
-          { src: "/banner6MD.png", alt: "Banner 6" },
+          { src: "/bannerCelular1.jpg", alt: "Banner 1" },
+          { src: "/bannerCelular2.jpg", alt: "Banner 2" },
         ]}
+
       />
 
 
