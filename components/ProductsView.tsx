@@ -17,10 +17,10 @@ export default function ProductsView({ products }: ProductsViewProps) {
       <StoreSection />
 
       {/* Coleções */}
-      <div className="flex justify-center gap-8 my-12">
+      {/* <div className="flex justify-center gap-8 my-12">
         <CollectionCard image="/colection-icon.jpg" title="Evil Dead" />
 
-      </div>
+      </div> */}
 
       {/* Título */}
       <div className="">
