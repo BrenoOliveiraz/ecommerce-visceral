@@ -68,7 +68,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
           transition={{ duration: 1, ease: 'easeInOut' }}
           className="w-full h-full absolute top-0 left-0"
         >
-          <div className="w-full h-full relative">
+          <div className="w-full h-full relative mt-1.5">
             <Image
               src={selectedImages[index].src}
               alt={selectedImages[index].alt}
