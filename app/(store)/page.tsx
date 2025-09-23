@@ -10,8 +10,8 @@ export default async function Home() {
     <div>
       <BannerS1
         images={[
-          { src: "/BANNER_ASH.jpg", alt: "BANNER ASH" },
-          { src: "/bannerMenina.jpg", alt: "BANNER LINDA " },
+          { src: "/b1.jpg", alt: "BANNER ASH" },
+          { src: "/b2.jpg", alt: "BANNER LINDA " },
 
         ]}
         imagesMD={[
