@@ -41,7 +41,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
 
   return (
     <div className="w-screen h-[85vh] relative overflow-hidden">
-      {/* Loader inicial */}
+     
       <AnimatePresence>
         {loading && (
           <motion.div
@@ -60,7 +60,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
       {/* Carrossel */}
       <AnimatePresence initial={false} custom={direction}>
         <motion.div
-          key={index} // mantém animação de troca entre slides
+          key={index} 
           custom={direction}
           initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -68,7 +68,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
           transition={{ duration: 1, ease: 'easeInOut' }}
           className="w-full h-full absolute top-0 left-0"
         >
-          <div className="w-full h-full relative mt-1.5">
+          <div className="w-full h-full relative ">
             <Image
               src={selectedImages[index].src}
               alt={selectedImages[index].alt}
@@ -78,7 +78,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
               priority={index === 0}
               loading={index <= 1 ? 'eager' : 'lazy'}
               onLoad={() => {
-                // só remove o loader na primeira imagem
+            
                 if (loading) setLoading(false);
               }}
             />
@@ -86,7 +86,6 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Botões de navegação */}
       {!loading && (
         <>
           <button
