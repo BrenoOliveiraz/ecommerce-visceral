@@ -3,6 +3,7 @@ import FullScreenImageSection from '@/components/FullScreenImageSection';
 import BannerS1 from '../../components/BannerS1'
 import ProductsView from '@/components/ProductsView';
 import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
+import Footer from '@/components/Footer';
 
 export default async function Home() {
   const products = await getAllProducts();
@@ -11,8 +12,9 @@ export default async function Home() {
     <div>
       <BannerS1
         images={[
-          { src: "/banner-teste.jpg", alt: "BANNER ASH" },
-          { src: "/bannerDesktop2.jpg", alt: "BANNER LINDA " },
+          { src: "/banner-1.jpg", alt: "BANNER ASH" },
+          { src: "/banner-2.jpg", alt: "BANNER LINDA " },
+          { src: "/banner-3.jpg", alt: "BANNER INICIO " },
         ]}
 
         imagesMD={[
@@ -30,8 +32,7 @@ export default async function Home() {
         alt="Imagem de transição com efeito parallax"
       />
 
-      
-      <ProductsView products={products} />
+        <Footer />
       {/* <FastSelector />
       <ProductsView products={products} />
       <BannerS2 />
