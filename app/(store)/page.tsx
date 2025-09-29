@@ -1,5 +1,4 @@
 
-import FullScreenImageSection from '@/components/FullScreenImageSection';
 import BannerS1 from '../../components/BannerS1'
 import ProductsView from '@/components/ProductsView';
 import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
@@ -27,10 +26,10 @@ export default async function Home() {
 
       <ProductsView products={products} />
       
-      <FullScreenImageSection
+      {/* <FullScreenImageSection
         src="/teste2.jpg"
         alt="Imagem de transição com efeito parallax"
-      />
+      /> */}
 
         <Footer />
       {/* <FastSelector />
