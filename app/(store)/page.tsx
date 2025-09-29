@@ -3,6 +3,7 @@ import BannerS1 from '../../components/BannerS1'
 import ProductsView from '@/components/ProductsView';
 import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
 import Footer from '@/components/Footer';
+import Poster from '@/components/PosterSession';
 
 export default async function Home() {
   const products = await getAllProducts();
@@ -25,6 +26,7 @@ export default async function Home() {
 
 
       <ProductsView products={products} />
+      <Poster />
       
       {/* <FullScreenImageSection
         src="/teste2.jpg"

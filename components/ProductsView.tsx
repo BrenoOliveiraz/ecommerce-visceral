@@ -16,7 +16,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
 
       {/* Título */}
       <div className="">
-        <div className="flex items-center justify-between mb-8 max-w-6xl mx-auto">
+        <div className="flex items-center justify-between mb-8 max-w-7xl mx-auto">
           <h2 className="text-2xl md:text-3xl font-bold tracking-wide border-b-2 border-red-600 inline-block pb-1">
             PRE ORDER
           </h2>
@@ -46,7 +46,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
         </div>
 
         {/* Bloco de produtos */}
-        <div className="flex-1 bg-gray-200 rounded-lg p-4">
+        <div className="flex-1 bg-gray-200 rounded-lg p-2">
           <ProductGrid products={products.slice(0, 5)} />
         </div>
       </div>
