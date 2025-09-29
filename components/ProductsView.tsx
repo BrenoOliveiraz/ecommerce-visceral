@@ -39,15 +39,15 @@ export default function ProductsView({ products }: ProductsViewProps) {
           <Image
             width={300}
             height={450}
-            src="/initialImage.jpeg"
+            src="/initialImage2.jpeg"
             alt="Pre Order Highlight"
-            className="rounded-lg object-cover shadow-lg"
+           className="h-[500px] w-[300px] rounded-lg object-cover shadow-lg"
           />
         </div>
 
         {/* Bloco de produtos */}
         <div className="flex-1 bg-gray-200 rounded-lg p-2">
-          <ProductGrid products={products.slice(0, 5)} />
+          <ProductGrid products={products.slice(0, 3)} />
         </div>
       </div>
     </section>
