@@ -64,7 +64,7 @@ export default function Header() {
               className="hover:text-red-600 transition cursor-pointer"
               onMouseEnter={() => setOpenMenu(true)}
             >
-              Collections
+              Coleções
             </button>
 
             <Link

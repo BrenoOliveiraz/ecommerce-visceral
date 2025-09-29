@@ -32,8 +32,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
       </div>
 
       {/* Layout com imagem fora do bloco cinza */}
-      <div className="flex max-w-7xl mx-auto">
-        
+      <div className="flex flex-col md:flex-row gap-6 max-w-7xl mx-auto">
         {/* Imagem na parte preta */}
         <div className="flex-shrink-0 flex items-center justify-center">
           <Image
@@ -41,7 +40,7 @@ export default function ProductsView({ products }: ProductsViewProps) {
             height={450}
             src="/initialImage2.jpeg"
             alt="Pre Order Highlight"
-           className="h-[500px] w-[300px] rounded-lg object-cover shadow-lg"
+            className="h-[500px] w-[300px] rounded-lg object-cover shadow-lg"
           />
         </div>
 

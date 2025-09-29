@@ -12,7 +12,8 @@ export default function Poster() {
       }}
     >
       <div className="max-w-7xl w-full">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 mt-40 sm:mt-0">
+
           {/* Poster 1 */}
           <div className="relative bg-amber-200 rounded-lg border-4 border-red-700/40 shadow-lg shadow-red-600/50 overflow-hidden transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-[550px]">
