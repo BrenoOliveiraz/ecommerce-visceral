@@ -1,6 +1,7 @@
 // components/Footer.tsx
 import { Facebook, Instagram } from "lucide-react";
 import Link from "next/link";
+import { whatsappLink } from '@/lib/whatsLink';
 
 export default function Footer() {
   return (
@@ -44,7 +45,7 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/support" className="hover:text-red-500 transition">
+              <Link href={whatsappLink} className="hover:text-red-500 transition">
                 Atendimento
               </Link>
             </li>
