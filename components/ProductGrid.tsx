@@ -18,7 +18,7 @@ export default function ProductGrid({ products }: { products: Product[] }) {
                         exit={{ opacity: 0 }}
                         className="flex justify-center p-2"
                     >
-                        <div className="w-full max-w-[350px]"> {/* antes estava 250px */}
+                        <div className="w-full max-w-[350px]"> 
                             <ProductCard product={product} />
                         </div>
                     </motion.div>

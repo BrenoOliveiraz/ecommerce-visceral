@@ -18,8 +18,9 @@ export default async function Home() {
         ]}
 
         imagesMD={[
-          { src: "/bannerCelular1.jpg", alt: "Banner 1" },
-          { src: "/bannerCelular2.jpg", alt: "Banner 2" },
+          { src: "/celular-1.jpg", alt: "Banner 1" },
+          { src: "/celular-2.jpg", alt: "Banner 2" },
+          { src: "/celular-3.jpg", alt: "Banner 3" },
         ]}
 
       />
