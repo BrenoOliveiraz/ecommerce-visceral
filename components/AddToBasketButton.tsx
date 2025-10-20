@@ -50,7 +50,7 @@ function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
         className={`
           w-10 h-10 rounded-full flex items-center justify-center 
           font-bold text-lg transition-all duration-200 
-          border border-red-600
+          border border-red-600 cursor-pointer
           ${disabled
             ? "bg-gray-800 text-gray-500 cursor-not-allowed"
             : "bg-red-600 text-white hover:bg-red-700 shadow-md"}
