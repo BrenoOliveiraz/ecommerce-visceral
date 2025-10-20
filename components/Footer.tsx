@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer className="bg-[#0d0d0d] text-gray-400 border-t border-red-800">
       <div className="max-w-6xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
-        
+
         {/* Logo + Redes */}
         <div className="flex flex-col items-center md:items-start space-y-4">
           <img
@@ -38,6 +38,11 @@ export default function Footer() {
           <h4 className="text-white font-semibold mb-3">Menu</h4>
           <ul className="space-y-2">
             <li>
+              <Link href="/info/sobre" className="hover:text-red-500 transition">
+                VISCERAL
+              </Link>
+            </li>
+            <li>
               <Link href="/info/leia-antes-de-comprar" className="hover:text-red-500 transition">
                 LEIA ANTES DE COMPRAR
               </Link>
@@ -64,7 +69,7 @@ export default function Footer() {
         <div className="flex flex-col justify-center md:items-end">
           <p className="text-sm leading-relaxed">
             Copyright © 2025 <br />
-            Made by <span className="text-red-500">Breno Oliveira</span> | Visceral Clothing
+            Developed by <span className="text-red-500">Breno Oliveira</span> | Visceral Clothing
           </p>
         </div>
       </div>
