@@ -4,6 +4,7 @@ import "../globals.css";
 import { ClerkProvider } from '@clerk/nextjs'
 import Header from "@/components/Header";
 import { SanityLive } from "@/sanity/lib/live";
+import { ptBR } from "@clerk/localizations";
 
 import WhatsAppButton from "@/components/WhatsAppButton";
 
@@ -28,7 +29,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider dynamic>
+    <ClerkProvider localization={ptBR}  dynamic>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}

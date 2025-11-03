@@ -16,29 +16,16 @@ export default function Sobre() {
         </header>
 
         <p className="leading-relaxed text-gray-300 text-justify">
-          A Visceral nasceu do sonho de uma única pessoa — alguém que, desde
-          criança, sempre foi fascinado pelo universo dos filmes de terror. Ver
-          sempre as mesmas imagens genéricas em camisas, repetidas por todas as
-          marcas, começou a incomodar. Foi aí que surgiu o desejo de criar algo
-          novo, original e autêntico — algo que desse uma nova roupagem aos
-          personagens icônicos do terror, sem cair na mesmice ou na cópia.
+          A Visceral nasceu do sonho de quem sempre amou o terror.
+          Surgiu o desejo de criar algo original, releituras autênticas de ícones do gênero do terror que amamos.
         </p>
 
         <p className="leading-relaxed text-gray-300 text-justify">
-          Mesmo sendo um projeto individual, a loja só ganhou vida graças a um
-          incentivo importante. Sem esse empurrão, talvez a Visceral ainda
-          estivesse guardada no papel ou esperando “o momento certo” para
-          acontecer. Esse apoio antecipou o que levaria muito mais tempo para se
-          concretizar.
+          O projeto só saiu do papel graças a um incentivo essencial, que transformou vontade em ação.
         </p>
 
         <p className="leading-relaxed text-gray-300 text-justify">
-          A essência da Visceral é clara: criar artes que não existem, fugir do
-          óbvio e nunca roubar o trabalho de outras pessoas para chamar de
-          exclusivo. A proposta é entregar originalidade de verdade,
-          respeitando quem cria e valorizando o novo. Aqui, cada desenho é
-          pensado para surpreender, provocar e honrar o terror de forma única —
-          do jeito que sempre deveria ter sido.
+          A essência da Visceral é simples: respeitar a originalidade.  Cada arte é feita para ser única.
         </p>
       </article>
     </section>

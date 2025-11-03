@@ -5,6 +5,10 @@ import { getAllProducts } from "@/sanity/lib/products/getAllProducts";
 import Footer from '@/components/Footer';
 import Poster from '@/components/PosterSession';
 
+
+export const dynamic = "force-dynamic";
+export const revalidate = 60
+
 export default async function Home() {
   const products = await getAllProducts();
 

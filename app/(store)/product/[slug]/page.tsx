@@ -1,4 +1,5 @@
-import AddToBasketButton from "@/components/AddToBasketButton";
+
+import ProductSizeSelector from "@/components/ProductSizeSelector";
 import SizeChartModal from "@/components/sizeChart";
 
 import { imageUrl } from "@/lib/imageUrl";
@@ -8,22 +9,30 @@ import Image from "next/image";
 
 import { notFound } from "next/navigation";
 
+
+export const dynamic = "force-dynamic";
+export const revalidate = 60
+
+
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const product = await getProductBySlug(slug);
 
-  if (!product) {
-    return notFound();
-  }
+  if (!product) return notFound();
 
-  const isOutOfStock = product.stock != null && product.stock <= 0;
+  // 🧠 Nova lógica de estoque
+  const stockP = product.stockP ?? 0;
+  const stockM = product.stockM ?? 0;
+  const stockG = product.stockG ?? 0;
+
+  const isOutOfStock = stockP <= 0 && stockM <= 0 && stockG <= 0;
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="container mx-auto px-4 py-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
 
         {/* Imagem do produto */}
-        <div className={`relative aspect-square overflow-hidden rounded-lg ${isOutOfStock ? "opacity-50" : ""}`}>
+        <div className={`relative aspect-square overflow-hidden rounded-xl shadow-md ${isOutOfStock ? "opacity-50" : ""}`}>
           {product.image && (
             <Image
               src={imageUrl(product.image).url()}
@@ -33,8 +42,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             />
           )}
           {isOutOfStock && (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-              <span className="text-white font-bold text-lg">Out of Stock</span>
+            <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+              <span className="text-white font-semibold text-lg">Produto Esgotado</span>
             </div>
           )}
         </div>
@@ -43,46 +52,53 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div className="flex flex-col justify-between">
           <div>
             {/* Nome e preço */}
-            <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <div className="text-xl font-semibold  mb-4">
+            <h1 className="text-3xl font-bold mb-3">{product.name}</h1>
+            <div className="text-2xl font-semibold text-red-500 mb-6">
               R${product.price?.toFixed(2)}
             </div>
 
-            {/* Descrição do produto */}
-            {Array.isArray(product.description) && (
-              <div className="text-base leading-relaxed  mb-4">
-                <PortableText value={product.description} />
-              </div>
+            {/* Descrição */}
+            {[product.description, product.descriptionP2, product.descriptionP3].map(
+              (desc, index) =>
+                Array.isArray(desc) && (
+                  <div key={index} className="text-base leading-relaxed text-gray-300 mb-6 prose prose-invert max-w-none">
+                    <PortableText value={desc} />
+                  </div>
+                )
             )}
 
-            <p className="mt-10">Design por - brunoold.art</p>
-            {/* Tabela de tamanhos */}
+            {/* Estoque por tamanho */}
+
+
+            {/* Design */}
+            <p className="text-sm text-gray-400 mt-8 italic">Design por — {product.design}</p>
 
             {/* Tabela de tamanhos */}
-            <div className="mb-6 mt-6">
               <SizeChartModal />
-            </div>
 
             {/* Aviso de pré-venda */}
-            <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded mb-6 text-sm leading-relaxed">
+            <div className="mt-10 bg-red-950 border-l-4 border-yellow-500 text-white p-5 rounded-lg text-sm leading-relaxed shadow-sm">
               <p>
-                Observe que as <strong>pré-vendas</strong> ficarão disponíveis por um período de <strong>2 meses</strong> e, após o
+                Observe que as <strong>pré-vendas</strong> ficarão disponíveis por um período de <strong>5 dias</strong> e, após o
                 encerramento das vendas, o envio ocorre em até <strong>15 dias úteis</strong>.
               </p>
-              <p className="mt-2">
+              <p className="mt-3">
                 Por favor, leia isto antes de fazer o pedido. Obrigado.
               </p>
-              <p className="mt-2 font-medium">
-                Envios da pré-venda iniciam-se a partir do dia <strong>15 de Janeiro</strong>.
+              <p className="mt-3 font-medium">
+                Envios da pré-venda iniciam-se a partir do dia <strong>5 de Dezembro</strong>.
               </p>
             </div>
-
           </div>
 
           {/* Botão de adicionar ao carrinho */}
-          <div className="mt-6">
-            <AddToBasketButton product={product} disabled={isOutOfStock} />
-          </div>
+          <ProductSizeSelector
+            stockP={stockP}
+            stockM={stockM}
+            stockG={stockG}
+            isOutOfStock={isOutOfStock}
+            product={product}
+          />
         </div>
 
       </div>

@@ -1,9 +1,23 @@
-# No menu principal, tá faltando só adicionar o "sobre a Visceral"
+<!-- # remover os 3 cards iniciais -->
 
-# No menu das roupas, ajeitar lá os textos que tá tudo colado uns nos outros, botar lá o P,M,G, a tabela de medidas e as fotos (mas as fotos só quando eu for pegar as roupas em fortaleza)
+<!-- # trocar "pre order" pra "evil dead" -->
 
-# Criar aquele e-mail lá que confirma o pagamento do produto e também disparar o e-mail quando o produto é enviado.
+<!-- # substituir o text sobre pra esse:
 
-# Fazer os esquemas dos fretes
+A Visceral nasceu do sonho de quem sempre amou o terror. Surgiu o desejo de criar algo original — releituras autênticas de ícones do gênero do terror que amamos,
 
-# Fazer os testes de pagamento
+O projeto só saiu do papel graças a um incentivo essencial, que transformou vontade em ação.
+
+A essência da Visceral é simples: respeitar a originalidade. Cada arte é feita para ser única.
+
+#traduzir o checkout -->
+
+<!-- # trocar o fundo amarelo do warn pra esse:
+
+Observe que as pré-vendas ficarão disponíveis por um período de 5 dias , após o encerramento das vendas, o envio ocorre em até 15 dias úteis.
+
+Por favor, leia isto antes de fazer o pedido. Obrigado.
+
+Envios da pré-venda iniciam-se a partir do dia 5 de Dezembro. -->
+
+# adicionar o campo do frete no checkout

@@ -1,7 +1,8 @@
-// components/Footer.tsx
 import { Facebook, Instagram } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { whatsappLink } from '@/lib/whatsLink';
+
 export default function Footer() {
   return (
     <footer className="bg-[#0d0d0d] text-gray-400 border-t border-red-800">
@@ -9,9 +10,11 @@ export default function Footer() {
 
         {/* Logo + Redes */}
         <div className="flex flex-col items-center md:items-start space-y-4">
-          <img
+          <Image
             src="/logo-footer.png"
             alt="Visceral Logo"
+            width={112}
+            height={112}
             className="w-28 mx-auto md:mx-0"
           />
 

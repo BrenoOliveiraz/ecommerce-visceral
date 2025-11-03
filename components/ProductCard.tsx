@@ -4,7 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ProductCard({ product }: { product: Product }) {
-  const isOutOfStock = product.stock != null && product.stock <= 0;
+  // 🧠 Nova lógica de estoque
+  const stockP = product.stockP ?? 0;
+  const stockM = product.stockM ?? 0;
+  const stockG = product.stockG ?? 0;
+
+  const isOutOfStock = stockP <= 0 && stockM <= 0 && stockG <= 0;
 
   return (
     <Link
@@ -30,11 +35,15 @@ export default function ProductCard({ product }: { product: Product }) {
             fill
           />
         )}
+        {isOutOfStock && (
+          <div className="absolute inset-0 flex items-center justify-center bg-black/60">
+            <span className="text-white font-semibold text-sm">Esgotado</span>
+          </div>
+        )}
       </div>
 
       {/* conteúdo */}
       <div className="p-4 text-center flex flex-col gap-2">
-
         <h2 className="text-sm md:text-base font-semibold text-white min-h-[80px]">
           {product.name}
         </h2>

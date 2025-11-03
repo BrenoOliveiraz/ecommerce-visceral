@@ -1,65 +1,91 @@
-'use client'
+'use client';
 
-import { useBasketStore } from '@/app/(store)/store';
-import { Product } from '@/sanity.types';
-import { useEffect, useState } from 'react';
+import { useState } from "react";
+import { useBasketStore } from "@/app/(store)/store";
+import { Product } from "@/sanity.types";
 
 interface AddToBasketButtonProps {
   product: Product;
+  size?: "P" | "M" | "G" | null;
+  stock?: number;
   disabled?: boolean;
 }
 
-function AddToBasketButton({ product, disabled }: AddToBasketButtonProps) {
+export default function AddToBasketButton({
+  product,
+  size,
+  stock = 0,
+  disabled,
+}: AddToBasketButtonProps) {
   const { addItem, removeItem, getItemCount } = useBasketStore();
-  const itemCount = getItemCount(product._id);
-  const [isClient, setIsClient] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // Conta quantos itens deste produto/tamanho estão no carrinho
+  const itemCount = getItemCount(product._id, size || "");
 
-  if (!isClient) return null;
+  const handleAdd = () => {
+    if (!size) {
+      setError("Selecione um tamanho primeiro!");
+      return;
+    }
+
+    // ⚠️ só mostra erro se tiver tamanho e estoque definido
+    if (size && stock && itemCount >= stock) {
+      setError("⚠️ Você já adicionou o máximo disponível em estoque.");
+      return;
+    }
+
+    setError(null);
+    addItem(product, size);
+  };
+
+  const handleRemove = () => {
+    if (!size) return;
+    setError(null);
+    removeItem(product._id, size);
+  };
 
   return (
-    <div className="flex items-center justify-center gap-3 mt-6">
-      {/* Botão de remover */}
-      <button
-        onClick={() => removeItem(product._id)}
-        disabled={itemCount === 0 || disabled}
-        className={`
-          w-10 h-10 rounded-full flex items-center justify-center 
-          font-bold text-lg transition-all duration-200 
-          border border-red-600
-          ${itemCount === 0 || disabled
-            ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-            : "bg-black text-red-500 hover:bg-red-600 hover:text-white shadow-md"}
-        `}
-      >
-        -
-      </button>
+    <div className="flex flex-col items-center gap-2">
+      {/* Botões + e - */}
+      <div className="flex items-center gap-3">
+        <button
+          onClick={handleRemove}
+          disabled={disabled || itemCount === 0}
+          className={`px-3 py-1 text-xl font-bold rounded-md border border-gray-600 transition-colors
+            ${
+              disabled || itemCount === 0
+                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                : "bg-zinc-800 text-white hover:bg-zinc-700"
+            }`}
+        >
+          -
+        </button>
 
-      {/* Quantidade */}
-      <span className="min-w-[2rem] text-center font-semibold text-lg text-white">
-        {itemCount}
-      </span>
+        <span className="text-white font-semibold min-w-[2rem] text-center">
+          {itemCount}
+        </span>
 
-      {/* Botão de adicionar */}
-      <button
-        onClick={() => addItem(product)}
-        disabled={disabled}
-        className={`
-          w-10 h-10 rounded-full flex items-center justify-center 
-          font-bold text-lg transition-all duration-200 
-          border border-red-600 cursor-pointer
-          ${disabled
-            ? "bg-gray-800 text-gray-500 cursor-not-allowed"
-            : "bg-red-600 text-white hover:bg-red-700 shadow-md"}
-        `}
-      >
-        +
-      </button>
+        <button
+          onClick={handleAdd}
+          disabled={disabled}
+          className={`      w-10 h-10 rounded-full flex items-center justify-center 
+            font-bold text-lg transition-all duration-200 
+            border border-red-600 cursor-pointer
+            ${
+              disabled
+                ? "bg-gray-800 text-gray-500 cursor-not-allowed"
+               : "bg-red-600 text-white hover:bg-red-700 shadow-md"}
+            }`}
+
+      
+        >
+          +
+        </button>
+      </div>
+
+      {/* Mensagens de erro */}
+      {error && <p className="text-yellow-400 text-sm text-center">{error}</p>}
     </div>
   );
 }
-
-export default AddToBasketButton;
