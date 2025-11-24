@@ -126,7 +126,7 @@ export default function Header() {
                 <ul className="space-y-2 text-sm text-gray-300">
                   <li>
                     <Link
-                      href="/collections/evil-dead"
+                      href='/categories/evil-dead'
                       className="hover:text-red-500 transition"
                     >
                       Evil Dead (1981)

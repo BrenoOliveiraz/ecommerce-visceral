@@ -67,7 +67,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 )
             )}
 
-            {/* Estoque por tamanho */}
 
 
             {/* Design */}

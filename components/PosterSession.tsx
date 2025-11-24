@@ -31,7 +31,7 @@ export default function Poster() {
           <div className="relative bg-amber-200 rounded-lg border-4 border-red-700/40 shadow-lg shadow-red-600/50 overflow-hidden transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-[550px]">
               <Image
-                src="/poster-2.jpg"
+                src="/poster-linda.jpeg"
                 alt="Poster da Vagabunda"
                 fill
                 className="object-cover"

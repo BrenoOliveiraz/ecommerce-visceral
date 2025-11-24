@@ -1,6 +1,5 @@
 'use client'
 
-import AddToBasketButton from '@/components/AddToBasketButton';
 import { useBasketStore } from '../store';
 import { SignInButton, useAuth, useUser } from '@clerk/nextjs';
 import { useRouter } from 'next/navigation';
@@ -11,6 +10,7 @@ import Loader from '@/components/Loader';
 import { createMercadoPagoCheckout } from '@/actions/createMercadoPagoCheckout';
 import CalculoFrete from '@/components/FreteCalculator';
 import { Product } from '@/sanity.types';
+import BasketButtons from '@/components/BasketButtons';
 
 export type Metadata = {
   orderNumber: string;
@@ -145,11 +145,12 @@ export default function BasketPage() {
                   <p className="text-sm sm:text-base text-gray-300">
                     Preço: R${((item.product.price ?? 0) * item.quantity).toFixed(2)}
                   </p>
+                  
                 </div>
               </div>
 
               <div className="flex items-center ml-4 flex-shrink-0">
-                <AddToBasketButton
+                <BasketButtons
                   product={item.product}
                   size={item.size}
                   stock={getStockForSize(item.product, item.size)}
@@ -202,10 +203,18 @@ export default function BasketPage() {
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading}
-              className="mt-4 w-full bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors"
+              disabled={isLoading || valorFrete === 0}
+              className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
+      ${valorFrete === 0
+                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 text-white"}
+    `}
             >
-              {isLoading ? 'Processando...' : 'Finalizar compra'}
+              {valorFrete === 0
+                ? "Selecione o frete para continuar"
+                : isLoading
+                  ? "Processando..."
+                  : "Finalizar compra"}
             </button>
           ) : (
             <SignInButton mode="modal">
@@ -214,6 +223,7 @@ export default function BasketPage() {
               </button>
             </SignInButton>
           )}
+
         </div>
 
         <div className="h-64 lg:h-0">{/* Spacer */}</div>

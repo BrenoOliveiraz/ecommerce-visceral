@@ -53,27 +53,27 @@ export default function ProductSizeSelector({
               key={size}
               disabled={isDisabled}
               onClick={() => handleSelectSize(size as "P" | "M" | "G")}
-              className={`px-4 py-2 rounded-md border ${
-                selectedSize === size
+              className={`px-4 py-2 rounded-md border ${selectedSize === size
                   ? "bg-red-600 text-white border-red-700"
                   : "bg-zinc-800 text-gray-200 border-gray-600"
-              } ${
-                isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700"
-              }`}
+                } ${isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700"
+                }`}
             >
               {size}
             </button>
+
           );
         })}
+        <AddToBasketButton
+          product={product}
+          size={selectedSize}
+          stock={selectedStock}
+          disabled={isOutOfStock || !selectedSize} // 🚀 só habilita quando o tamanho foi escolhido
+        />
       </div>
 
       {/* Botão de adicionar ao carrinho */}
-      <AddToBasketButton
-        product={product}
-        size={selectedSize}
-        stock={selectedStock}
-        disabled={isOutOfStock || !selectedSize} // 🚀 só habilita quando o tamanho foi escolhido
-      />
+
     </div>
   );
 }
