@@ -20,6 +20,7 @@ export type FreteOption = {
 
 interface CalculoFreteProps {
   onSelectFrete?: (valorFrete: number) => void;
+  onCepEncontrado?: (cep: string, endereco: string | null) => void; 
 }
 
 export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {

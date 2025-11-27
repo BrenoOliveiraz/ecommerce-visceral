@@ -17,9 +17,11 @@ export type Metadata = {
   customerName: string;
   customerEmail: string;
   clerkUserId: string;
+  cep: string;
+  endereco: string | null;
 };
 
-export type Size = 'P' | 'M' | 'G' | null | undefined;
+export type Size = 'P' | 'M' | 'G' | undefined;
 
 interface BasketItem {
   product: Product;
@@ -33,10 +35,11 @@ export default function BasketPage() {
   const { isSignedIn } = useAuth();
   const { user } = useUser();
   const router = useRouter();
-
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [valorFrete, setValorFrete] = useState(0);
+  const [cep, setCep] = useState("");
+  const [endereco, setEndereco] = useState<string | null>(null);
 
   useEffect(() => {
     setIsClient(true);
@@ -63,6 +66,8 @@ export default function BasketPage() {
         customerName: user?.fullName ?? 'Unknown',
         customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
         clerkUserId: user!.id,
+        cep,
+        endereco: endereco ?? "Não informado",
       };
 
       const checkoutUrl = await createMercadoPagoCheckout(
@@ -83,14 +88,10 @@ export default function BasketPage() {
 
   const getStockForSize = (product: Product, size?: Size): number => {
     switch (size) {
-      case 'P':
-        return product.stockP ?? 0;
-      case 'M':
-        return product.stockM ?? 0;
-      case 'G':
-        return product.stockG ?? 0;
-      default:
-        return 0;
+      case 'P': return product.stockP ?? 0;
+      case 'M': return product.stockM ?? 0;
+      case 'G': return product.stockG ?? 0;
+      default: return 0;
     }
   };
 
@@ -102,7 +103,8 @@ export default function BasketPage() {
       <h1 className="text-2xl font-bold mb-4 text-white">Seu carrinho</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Lista de produtos */}
+
+        {/* LISTA DE PRODUTOS */}
         <div className="flex-grow">
           {groupedItems.map((item) => (
             <div
@@ -127,29 +129,29 @@ export default function BasketPage() {
                     />
                   )}
                 </div>
+
                 <div className="min-w-0">
                   <h2 className="text-lg sm:text-xl font-semibold truncate text-white">
                     {item.product.name}
                   </h2>
 
                   {item.size && (
-                    <p className="text-sm sm:text-base text-gray-400">
+                    <p className="text-sm text-gray-400">
                       Tamanho: <span className="text-gray-200">{item.size}</span>
                     </p>
                   )}
 
-                  <p className="text-sm sm:text-base text-gray-300">
+                  <p className="text-sm text-gray-300">
                     Quantidade: {item.quantity}
                   </p>
 
-                  <p className="text-sm sm:text-base text-gray-300">
+                  <p className="text-sm text-gray-300">
                     Preço: R${((item.product.price ?? 0) * item.quantity).toFixed(2)}
                   </p>
-                  
                 </div>
               </div>
 
-              <div className="flex items-center ml-4 flex-shrink-0">
+              <div className="flex items-center ml-4">
                 <BasketButtons
                   product={item.product}
                   size={item.size}
@@ -159,7 +161,7 @@ export default function BasketPage() {
             </div>
           ))}
 
-          {/* Botão Limpar Carrinho abaixo dos itens */}
+          {/* Botão limpar carrinho */}
           <div className="mb-6">
             <button
               onClick={clearBasket}
@@ -170,15 +172,29 @@ export default function BasketPage() {
           </div>
         </div>
 
-        {/* Resumo do pedido */}
-        <div className="w-full lg:w-80 lg:sticky lg:top-4 h-fit bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg order-first lg:order-last fixed bottom-0 left-0 lg:left-auto">
-          <h3 className="text-xl font-semibold text-white">Resumo do pedido</h3>
+        {/* RESUMO DO PEDIDO — harmonizado */}
+        <div
+          className="
+            w-full 
+            lg:w-80 
+            bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg
+            order-last 
+            lg:sticky lg:top-4
+          "
+        >
+          <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
 
-          <div className="mt-4 mb-6">
-            <CalculoFrete onSelectFrete={(valor) => setValorFrete(valor)} />
+          <div className="mb-6">
+            <CalculoFrete 
+            onSelectFrete={(valor) => setValorFrete(valor)}
+            onCepEncontrado={(ce, en)=> {
+              setEndereco(en);
+              setCep(ce)
+            }}
+            />
           </div>
 
-          <div className="mt-4 space-y-2 text-gray-300">
+          <div className="space-y-2 text-gray-300">
             <p className="flex justify-between">
               <span>Itens:</span>
               <span>{groupedItems.reduce((t, i) => t + i.quantity, 0)}</span>
@@ -203,18 +219,12 @@ export default function BasketPage() {
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || valorFrete === 0}
+              disabled={isLoading}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-      ${valorFrete === 0
-                  ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                  : "bg-red-600 hover:bg-red-700 text-white"}
-    `}
+    ${isLoading ? 'bg-gray-700 text-gray-400' : 'bg-red-600 hover:bg-red-700 text-white'}
+  `}
             >
-              {valorFrete === 0
-                ? "Selecione o frete para continuar"
-                : isLoading
-                  ? "Processando..."
-                  : "Finalizar compra"}
+              {isLoading ? "Processando..." : "Finalizar compra"}
             </button>
           ) : (
             <SignInButton mode="modal">
@@ -223,10 +233,8 @@ export default function BasketPage() {
               </button>
             </SignInButton>
           )}
-
         </div>
 
-        <div className="h-64 lg:h-0">{/* Spacer */}</div>
       </div>
     </div>
   );

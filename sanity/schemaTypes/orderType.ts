@@ -14,14 +14,20 @@ export const orderType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'stripeCheckoutSessionId',
-      title: 'Stripe Checkout Session ID',
+      name: 'mercadoPagoPreferenceId',
+      title: 'Mercado Pago Preference ID',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'stripeCustomerId', 
-      title: 'Stripe Customer ID', 
+      name: 'mercadoPagoPaymentId',
+      title: 'Mercado Pago Payment ID',
+      type: 'number',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'mercadoPagoPayerId',
+      title: 'Mercado Pago Payer ID',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -40,12 +46,6 @@ export const orderType = defineType({
     defineField({
       name: 'email',
       title: 'Customer Email',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    }),
-    defineField({
-      name: 'stripePaymentIntentId',
-      title: 'Stripe Payment Intent ID',
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
@@ -70,18 +70,25 @@ export const orderType = defineType({
               title: 'Quantity Purchased',
               type: 'number',
             }),
+            defineField({
+              name: 'size',
+              title: 'Product Size',
+              type: 'string',
+              validation: (Rule) => Rule.required(),
+            }),
           ],
           preview: {
             select: {
               title: 'product.name',
               quantity: 'quantity',
+              size: 'size',
               image: 'product.image',
               price: 'product.price',
               currency: 'product.currency',
             },
-            prepare({ title, quantity, image, price, currency }) {
+            prepare({ title, quantity, size, image, price, currency }) {
               return {
-                title: `${title} x${quantity}`,
+                title: `${title} ${size} x${quantity}`,
                 subtitle: price
                   ? `${(price * quantity).toFixed(2)} ${currency}`
                   : '',

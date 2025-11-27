@@ -40,7 +40,7 @@ export default function BuscaCep({ onCepEncontrado }: BuscaCepProps) {
   };
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valor = e.target.value.replace(/\D/g, ""); // apenas números
+    const valor = e.target.value.replace(/\D/g, ""); 
     setCep(valor);
 
     if (valor.length === 8) {

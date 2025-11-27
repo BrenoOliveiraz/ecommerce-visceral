@@ -75,12 +75,12 @@ export type Order = {
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
-  stripeCheckoutSessionId?: string;
-  stripeCustomerId?: string;
+  mercadoPagoPreferenceId?: string;
+  mercadoPagoPaymentId?: number;
+  mercadoPagoPayerId?: string;
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentIntentId?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -89,6 +89,7 @@ export type Order = {
       [internalGroqTypeReferenceTo]?: "product";
     };
     quantity?: number;
+    size?: string;
     _type: "productWithQuantity";
     _key: string;
   }>;
@@ -389,7 +390,7 @@ export type SanityAssetSourceData = {
 
 export type AllSanitySchemaTypes = Author | Sale | Order | Product | Category | BlockContent | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
-// Source: ./sanity/lib/orders/getMyOrders.tsx
+// Source: ./sanity/lib/orders/getMyOrders.ts
 // Variable: MY_ORDERS_QUERY
 // Query: *[_type == "order" && clerkUserId == $userId] | order(orderDate desc) {        ...,        products[]{            ...,            product->        }      }
 export type MY_ORDERS_QUERYResult = Array<{
@@ -399,12 +400,12 @@ export type MY_ORDERS_QUERYResult = Array<{
   _updatedAt: string;
   _rev: string;
   orderNumber?: string;
-  stripeCheckoutSessionId?: string;
-  stripeCustomerId?: string;
+  mercadoPagoPreferenceId?: string;
+  mercadoPagoPaymentId?: number;
+  mercadoPagoPayerId?: string;
   clerkUserId?: string;
   customerName?: string;
   email?: string;
-  stripePaymentIntentId?: string;
   products: Array<{
     product: {
       _id: string;
@@ -533,6 +534,7 @@ export type MY_ORDERS_QUERYResult = Array<{
       stockG?: number;
     } | null;
     quantity?: number;
+    size?: string;
     _type: "productWithQuantity";
     _key: string;
   }> | null;
