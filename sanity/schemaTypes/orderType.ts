@@ -50,6 +50,18 @@ export const orderType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'cep',
+      title: 'CEP',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
+      name: 'endereco',
+      title: 'Endereço',
+      type: 'string',
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: 'products',
       title: 'Products',
       type: 'array',
@@ -89,9 +101,7 @@ export const orderType = defineType({
             prepare({ title, quantity, size, image, price, currency }) {
               return {
                 title: `${title} ${size} x${quantity}`,
-                subtitle: price
-                  ? `${(price * quantity).toFixed(2)} ${currency}`
-                  : '',
+                subtitle: price ? `${(price * quantity).toFixed(2)} ${currency}` : '',
                 media: image,
               }
             },

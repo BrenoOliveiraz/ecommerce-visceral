@@ -172,25 +172,17 @@ export default function BasketPage() {
           </div>
         </div>
 
-        {/* RESUMO DO PEDIDO — harmonizado */}
-        <div
-          className="
-            w-full 
-            lg:w-80 
-            bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg
-            order-last 
-            lg:sticky lg:top-4
-          "
-        >
+        {/* RESUMO DO PEDIDO */}
+        <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg order-last lg:sticky lg:top-4">
           <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
 
           <div className="mb-6">
             <CalculoFrete 
-            onSelectFrete={(valor) => setValorFrete(valor)}
-            onCepEncontrado={(ce, en)=> {
-              setEndereco(en);
-              setCep(ce)
-            }}
+              onSelectFrete={(valor) => setValorFrete(valor)}
+              onCepEncontrado={(ce, en)=> {
+                setEndereco(en);
+                setCep(ce);
+              }}
             />
           </div>
 
@@ -221,8 +213,8 @@ export default function BasketPage() {
               onClick={handleCheckout}
               disabled={isLoading}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-    ${isLoading ? 'bg-gray-700 text-gray-400' : 'bg-red-600 hover:bg-red-700 text-white'}
-  `}
+                ${isLoading ? 'bg-gray-700 text-gray-400' : 'bg-red-600 hover:bg-red-700 text-white'}
+              `}
             >
               {isLoading ? "Processando..." : "Finalizar compra"}
             </button>

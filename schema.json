@@ -432,6 +432,20 @@
         },
         "optional": true
       },
+      "cep": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "endereco": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "products": {
         "type": "objectAttribute",
         "value": {

@@ -23,10 +23,7 @@ export async function POST(req: NextRequest) {
     const action = body.action;
     const paymentId = body.data.id;
 
-    if (!paymentId) {
-      return NextResponse.json({ ok: true });
-    }
-
+    if (!paymentId) return NextResponse.json({ ok: true });
     if (action !== "payment.created" && action !== "payment.updated") {
       return NextResponse.json({ ok: true });
     }
@@ -39,29 +36,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
-    if (data.status !== "approved") {
-      return NextResponse.json({ ok: true });
-    }
+    if (data.status !== "approved") return NextResponse.json({ ok: true });
 
     const orderNumber = data.external_reference;
     const metadata = data.metadata as Metadata | undefined;
 
-    if (!orderNumber) {
-      return NextResponse.json({ ok: true });
-    }
+    if (!orderNumber) return NextResponse.json({ ok: true });
 
     const existingOrder = await backendClient.fetch(
       `*[_type == "order" && orderNumber == $orderNumber][0]`,
       { orderNumber }
     );
 
-    if (existingOrder) {
-      return NextResponse.json({ ok: true });
-    }
+    if (existingOrder) return NextResponse.json({ ok: true });
 
-    const items = (data.additional_info?.items || []).filter(
-      (item: any) => item.id !== "frete"
-    );
+    const items = data.additional_info.items;
+
+const metadataViaItem = items?.find((i: any) => i.id !== "frete")?.metadata;
 
     const sanityProducts = items.map((item: any) => ({
       _key: crypto.randomUUID(),
@@ -70,60 +61,59 @@ export async function POST(req: NextRequest) {
       size: item.metadata?.size || item.category_id || null,
     }));
 
-    let order;
-    try {
-      order = await backendClient.create({
-        _type: "order",
-        orderNumber,
-        mercadoPagoPaymentId: data.id,
-        mercadoPagoPayerId: data.payer?.id,
-        mercadoPagoPreferenceId: data.order?.id || null,
-        customerName:
-          data.payer?.first_name || metadata?.customerName || "Cliente",
-        clerkUserId: metadata?.clerkUserId || "",
-        email: data.payer?.email || metadata?.customerEmail,
-        currency: data.currency_id,
-        totalPrice: data.transaction_amount,
-        amountDiscount: 0,
-        status: "paid",
-        orderDate: new Date().toISOString(),
-        products: sanityProducts,
-      });
-    } catch {
-      return NextResponse.json({ ok: true });
-    }
+    // 📦 Endereço retornado pelo Mercado Pago
+    const cepFinal = metadataViaItem?.cep || "Não informado";
+    const enderecoFinal = metadataViaItem?.endereco || "Não informado";
 
-    try {
-      for (const item of sanityProducts) {
-        const productId = item.product._ref;
-        const quantity = item.quantity;
-        const size = item.size;
+    await backendClient.create({
+      _type: "order",
+      orderNumber,
+      mercadoPagoPaymentId: data.id,
+      mercadoPagoPayerId: data.payer?.id,
+      mercadoPagoPreferenceId: data.order?.id || null,
+      customerName: data.payer?.first_name || metadata?.customerName || "Cliente",
+      clerkUserId: metadata?.clerkUserId || "",
+      email: data.payer?.email || metadata?.customerEmail,
 
-        const product = await backendClient.fetch(
-          `*[_type == "product" && _id == $id][0]`,
-          { id: productId }
-        );
+      // ✅ Dados de endereço corrigidos
+      cep: cepFinal,
+      endereco: enderecoFinal || "Não informado",
 
-        if (!product) continue;
+      currency: data.currency_id,
+      totalPrice: data.transaction_amount,
+      amountDiscount: 0,
+      status: "paid",
+      orderDate: new Date().toISOString(),
+      products: sanityProducts,
+    });
 
-        const patch: any = {};
+    // 🔄 Atualização de estoque por tamanho
+    for (const item of sanityProducts) {
+      const productId = item.product._ref;
+      const quantity = item.quantity;
+      const size = item.size;
 
-        if (size === "P") {
-          patch.stockP = Math.max(0, (product.stockP ?? 0) - quantity);
-        } else if (size === "M") {
-          patch.stockM = Math.max(0, (product.stockM ?? 0) - quantity);
-        } else if (size === "G") {
-          patch.stockG = Math.max(0, (product.stockG ?? 0) - quantity);
-        } else {
-          continue;
-        }
+      const product = await backendClient.fetch(
+        `*[_type == "product" && _id == $id][0]`,
+        { id: productId }
+      );
 
+      if (!product) continue;
+
+      const patch: any = {};
+
+      if (size === "P") patch.stockP = Math.max(0, (product.stockP ?? 0) - quantity);
+      if (size === "M") patch.stockM = Math.max(0, (product.stockM ?? 0) - quantity);
+      if (size === "G") patch.stockG = Math.max(0, (product.stockG ?? 0) - quantity);
+
+      if (Object.keys(patch).length > 0) {
         await backendClient.patch(productId).set(patch).commit();
       }
-    } catch {}
+    }
 
     return NextResponse.json({ ok: true });
-  } catch {
+  } catch (error) {
+    console.error("🔥 Erro no webhook Mercado Pago:", error);
     return NextResponse.json({ ok: true });
   }
 }

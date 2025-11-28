@@ -81,6 +81,8 @@ export type Order = {
   clerkUserId?: string;
   customerName?: string;
   email?: string;
+  cep?: string;
+  endereco?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -406,6 +408,8 @@ export type MY_ORDERS_QUERYResult = Array<{
   clerkUserId?: string;
   customerName?: string;
   email?: string;
+  cep?: string;
+  endereco?: string;
   products: Array<{
     product: {
       _id: string;
