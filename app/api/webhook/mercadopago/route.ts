@@ -5,7 +5,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { backendClient } from "@/sanity/lib/backendClient";
 import { MercadoPagoConfig, Payment } from "mercadopago";
 import crypto from "crypto";
-import { Metadata } from "@/app/(store)/basket/page";
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MP_ACCESS_TOKEN!,
@@ -28,9 +27,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ ok: true });
     }
 
+    const paymentClient = new Payment(client);
+
     let data: any;
     try {
-      const paymentClient = new Payment(client);
       data = await paymentClient.get({ id: paymentId });
     } catch {
       return NextResponse.json({ ok: true });
@@ -38,8 +38,18 @@ export async function POST(req: NextRequest) {
 
     if (data.status !== "approved") return NextResponse.json({ ok: true });
 
-    const orderNumber = data.external_reference;
-    const metadata = data.metadata as Metadata | undefined;
+    // ============================================
+    // 🔥 Agora é JSON — sempre confiável
+    // ============================================
+    let ref: any = {};
+    try {
+      ref = JSON.parse(data.external_reference);
+    } catch {
+      console.error("Erro ao parsear external_reference");
+      return NextResponse.json({ ok: true });
+    }
+
+    const orderNumber = ref.orderNumber;
 
     if (!orderNumber) return NextResponse.json({ ok: true });
 
@@ -52,18 +62,18 @@ export async function POST(req: NextRequest) {
 
     const items = data.additional_info.items;
 
-const metadataViaItem = items?.find((i: any) => i.id !== "frete")?.metadata;
-
     const sanityProducts = items.map((item: any) => ({
       _key: crypto.randomUUID(),
       product: { _type: "reference", _ref: item.id },
       quantity: Number(item.quantity) || 1,
-      size: item.metadata?.size || item.category_id || null,
+      size: item.category_id || null,
     }));
 
-    // 📦 Endereço retornado pelo Mercado Pago
-    const cepFinal = metadataViaItem?.cep || "Não informado";
-    const enderecoFinal = metadataViaItem?.endereco || "Não informado";
+    // ============================================
+    // 🔥 Dados SEMPRE retornados do external_reference
+    // ============================================
+    const cepFinal = ref.cep || "Não informado";
+    const enderecoFinal = ref.endereco || "Não informado";
 
     await backendClient.create({
       _type: "order",
@@ -71,14 +81,11 @@ const metadataViaItem = items?.find((i: any) => i.id !== "frete")?.metadata;
       mercadoPagoPaymentId: data.id,
       mercadoPagoPayerId: data.payer?.id,
       mercadoPagoPreferenceId: data.order?.id || null,
-      customerName: data.payer?.first_name || metadata?.customerName || "Cliente",
-      clerkUserId: metadata?.clerkUserId || "",
-      email: data.payer?.email || metadata?.customerEmail,
-
-      // ✅ Dados de endereço corrigidos
+      customerName: ref.customerName,
+      clerkUserId: ref.clerkUserId,
+      email: ref.customerEmail,
       cep: cepFinal,
-      endereco: enderecoFinal || "Não informado",
-
+      endereco: enderecoFinal,
       currency: data.currency_id,
       totalPrice: data.transaction_amount,
       amountDiscount: 0,
@@ -87,7 +94,7 @@ const metadataViaItem = items?.find((i: any) => i.id !== "frete")?.metadata;
       products: sanityProducts,
     });
 
-    // 🔄 Atualização de estoque por tamanho
+    // Atualizar estoque
     for (const item of sanityProducts) {
       const productId = item.product._ref;
       const quantity = item.quantity;
@@ -112,6 +119,7 @@ const metadataViaItem = items?.find((i: any) => i.id !== "frete")?.metadata;
     }
 
     return NextResponse.json({ ok: true });
+
   } catch (error) {
     console.error("🔥 Erro no webhook Mercado Pago:", error);
     return NextResponse.json({ ok: true });

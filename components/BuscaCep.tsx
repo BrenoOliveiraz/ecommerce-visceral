@@ -40,7 +40,7 @@ export default function BuscaCep({ onCepEncontrado }: BuscaCepProps) {
   };
 
   const handleCepChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const valor = e.target.value.replace(/\D/g, ""); 
+    const valor = e.target.value.replace(/\D/g, "");
     setCep(valor);
 
     if (valor.length === 8) {
@@ -61,10 +61,8 @@ export default function BuscaCep({ onCepEncontrado }: BuscaCepProps) {
         onChange={handleCepChange}
         className="border border-gray-700 bg-gray-900 text-white p-2 rounded"
       />
-
       {loading && <p className="text-gray-400 text-sm">Buscando endereço...</p>}
       {erro && <p className="text-red-500 text-sm">{erro}</p>}
-
       {endereco && (
         <div className="bg-gray-800 border border-gray-700 text-gray-300 rounded p-2">
           <p className="text-sm">{endereco}</p>

@@ -33,6 +33,7 @@ export async function createMercadoPagoCheckout(
   const failureUrl = `${baseUrl}/basket`;
   const pendingUrl = `${baseUrl}/basket`;
 
+  // Usando metadata dinamicamente
   const itemsComFrete = [
     ...items.map(item => ({
       id: item.product._id,
@@ -59,6 +60,15 @@ export async function createMercadoPagoCheckout(
     }] : []),
   ];
 
+    const externalRef = JSON.stringify({
+    orderNumber: metadata.orderNumber,
+    cep: metadata.cep,
+    endereco: metadata.endereco,
+    clerkUserId: metadata.clerkUserId,
+    customerName: metadata.customerName,
+    customerEmail: metadata.customerEmail,
+  });
+
   const response = await preference.create({
     body: {
       items: itemsComFrete,
@@ -66,7 +76,7 @@ export async function createMercadoPagoCheckout(
         name: metadata.customerName,
         email: metadata.customerEmail,
       },
-      external_reference: metadata.orderNumber,
+      external_reference: externalRef,
       notification_url: `${baseUrl}/api/webhook/mercadopago`,
       back_urls: {
         success: successUrl,

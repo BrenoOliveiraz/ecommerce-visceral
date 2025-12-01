@@ -20,14 +20,14 @@ export type FreteOption = {
 
 interface CalculoFreteProps {
   onSelectFrete?: (valorFrete: number) => void;
-  onCepEncontrado?: (cep: string, endereco: string | null) => void; 
+  onCepEncontrado?: (cep: string, endereco: string | null) => void;
 }
 
-export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {
+export default function CalculoFrete({ onSelectFrete, onCepEncontrado  }: CalculoFreteProps) {
   const fromCep = "62508250";
-  const [toCep, setToCep] = useState("");
+  const [toCep, setToCep] = useState(""); // dinâmico
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [endereco, setEndereco] = useState<string | null>(null);
+  const [endereco, setEndereco] = useState<string | null>(null); // dinâmico
   const [resultado, setResultado] = useState<FreteOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -75,7 +75,6 @@ export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {
             item.price &&
             item.company.name.toLowerCase().includes("correios")
         );
-
         setResultado(opcoesValidas);
       } else {
         setErro("Erro inesperado no retorno da API");
@@ -92,10 +91,11 @@ export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {
     onSelectFrete?.(valor);
   };
 
-  const handleCepEncontrado = (cep: string, endereco: string | null) => {
-    setToCep(cep);
-    setEndereco(endereco);
-  };
+const handleCepEncontrado = (cep: string, endereco: string | null) => {
+  setToCep(cep);
+  setEndereco(endereco);
+  onCepEncontrado?.(cep, endereco); // 🔥 agora envia de volta ao BasketPage
+};
 
   return (
     <div className="max-w-xl mx-auto p-6">
@@ -103,7 +103,6 @@ export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {
 
       <div className="flex flex-col gap-3 mb-6">
         <BuscaCep onCepEncontrado={handleCepEncontrado} />
-
         <button
           onClick={calcularFrete}
           disabled={loading || toCep.length !== 8}
@@ -147,9 +146,7 @@ export default function CalculoFrete({ onSelectFrete }: CalculoFreteProps) {
                     currency: "BRL",
                   })}
                 </p>
-                <p className="text-sm text-gray-400">
-                  {item.delivery_time} dias úteis
-                </p>
+                <p className="text-sm text-gray-400">{item.delivery_time} dias úteis</p>
               </div>
             </div>
           );
