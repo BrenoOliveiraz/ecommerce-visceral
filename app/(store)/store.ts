@@ -2,11 +2,10 @@ import { Product } from "@/sanity.types";
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-// ✅ Agora cada item pode ter um tamanho opcional
 export interface BasketItem {
   product: Product;
   quantity: number;
-  size?: string; 
+  size?: string;
 }
 
 interface BasketState {
@@ -24,7 +23,6 @@ export const useBasketStore = create<BasketState>()(
     (set, get) => ({
       items: [],
 
-      // ✅ Adiciona item ao carrinho (considerando tamanho)
       addItem: (product, size) =>
         set((state) => {
           const existingItem = state.items.find(
@@ -32,7 +30,7 @@ export const useBasketStore = create<BasketState>()(
           );
 
           if (existingItem) {
-            // Se já existir mesmo produto + tamanho → soma quantidade
+
             return {
               items: state.items.map((item) =>
                 item.product._id === product._id && item.size === size
@@ -41,14 +39,13 @@ export const useBasketStore = create<BasketState>()(
               ),
             };
           } else {
-            // Se for tamanho novo → adiciona novo item
+
             return {
               items: [...state.items, { product, size, quantity: 1 }],
             };
           }
         }),
 
-      // ✅ Remove item (considerando tamanho)
       removeItem: (productId, size) =>
         set((state) => ({
           items: state.items.reduce((acc, item) => {
@@ -72,7 +69,7 @@ export const useBasketStore = create<BasketState>()(
           0
         ),
 
-      // ✅ Conta quantos de um mesmo produto+tamanho existem
+
       getItemCount: (productId, size) => {
         const item = get().items.find(
           (item) => item.product._id === productId && item.size === size

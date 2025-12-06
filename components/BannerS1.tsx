@@ -40,7 +40,7 @@ const BannerCarousel = ({ images, imagesMD }: BannerCarouselProps) => {
   }, [selectedImages.length]);
 
   return (
-    <div className="w-screen h-[85vh] relative overflow-hidden">
+    <div className="w-full h-[85vh] relative overflow-hidden ">
      
       <AnimatePresence>
         {loading && (

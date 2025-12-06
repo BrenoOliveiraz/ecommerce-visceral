@@ -6,7 +6,9 @@ import Header from "@/components/Header";
 import { SanityLive } from "@/sanity/lib/live";
 import { ptBR } from "@clerk/localizations";
 
+
 import WhatsAppButton from "@/components/WhatsAppButton";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,19 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider localization={ptBR}  dynamic>
+    <ClerkProvider localization={ptBR} dynamic>
       <html lang="en">
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <main>
-            <Header />
-            {children}
-          </main>
 
-          <WhatsAppButton />
+            <main>
+              <Header />
+              {children}
+            </main>
 
-          <SanityLive />
+            <WhatsAppButton />
+            <SanityLive />
+
 
         </body>
       </html>

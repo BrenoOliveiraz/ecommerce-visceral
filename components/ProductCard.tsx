@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ProductCard({ product }: { product: Product }) {
-  // 🧠 Nova lógica de estoque
+  
   const stockP = product.stockP ?? 0;
   const stockM = product.stockM ?? 0;
   const stockG = product.stockG ?? 0;
