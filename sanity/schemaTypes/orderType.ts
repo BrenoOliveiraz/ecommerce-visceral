@@ -61,6 +61,15 @@ export const orderType = defineType({
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
+
+    // 🔥 ADICIONADO — COMPLEMENTO
+    defineField({
+      name: 'complemento',
+      title: 'Complemento',
+      type: 'string',
+      validation: (Rule) => Rule.required().error("Complemento é obrigatório"),
+    }),
+
     defineField({
       name: 'products',
       title: 'Products',

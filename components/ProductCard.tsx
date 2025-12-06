@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 export default function ProductCard({ product }: { product: Product }) {
-  
+
   const stockP = product.stockP ?? 0;
   const stockM = product.stockM ?? 0;
   const stockG = product.stockG ?? 0;
@@ -27,14 +27,14 @@ export default function ProductCard({ product }: { product: Product }) {
     >
       {/* imagem */}
       <div className="relative aspect-square w-full overflow-hidden">
-        {product.image && (
+        {Array.isArray(product.images) && product.images.length > 0 && (
           <Image
-            className="object-contain transition-transform duration-500 group-hover:scale-110"
-            src={imageUrl(product.image).url()}
+            src={imageUrl(product.images[0]).url()}
             alt={product.name || "Product Image"}
             fill
           />
         )}
+
         {isOutOfStock && (
           <div className="absolute inset-0 flex items-center justify-center bg-black/60">
             <span className="text-white font-semibold text-sm">Esgotado</span>

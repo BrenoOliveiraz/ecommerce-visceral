@@ -11,6 +11,7 @@ export type Metadata = {
   clerkUserId: string;
   cep: string;
   endereco: string | null;
+  complemento: string;
 };
 
 export type GroupBasketItem = {
@@ -33,21 +34,24 @@ export async function createMercadoPagoCheckout(
   const failureUrl = `${baseUrl}/basket`;
   const pendingUrl = `${baseUrl}/basket`;
 
-  // Usando metadata dinamicamente
+  // produtos + frete
   const itemsComFrete = [
     ...items.map(item => ({
       id: item.product._id,
       title: item.product.name || 'Produto sem nome',
       description: `Tamanho: ${item.size ?? 'N/A'}`,
-      picture_url: item.product.image ? imageUrl(item.product.image).url() : 'https://via.placeholder.com/150',
+      picture_url: item.product.images ? imageUrl(item.product.images).url() : 'https://via.placeholder.com/150',
       quantity: Number(item.quantity),
       currency_id: 'BRL',
       unit_price: Number(item.product.price!.toFixed(2)),
       category_id: item.size,
+
+      // metadados por item (opcional)
       metadata: {
         size: item.size,
         cep: metadata.cep,
         endereco: metadata.endereco,
+        complemento: metadata.complemento, // <── ADICIONADO
       }
     })),
     ...(valorFrete > 0 ? [{
@@ -57,13 +61,20 @@ export async function createMercadoPagoCheckout(
       quantity: 1,
       currency_id: 'BRL',
       unit_price: valorFrete,
+      metadata: {
+        cep: metadata.cep,
+        endereco: metadata.endereco,
+        complemento: metadata.complemento, // <── ADICIONADO
+      }
     }] : []),
   ];
 
-    const externalRef = JSON.stringify({
+  // AGORA ENVIANDO COMPLEMENTO
+  const externalRef = JSON.stringify({
     orderNumber: metadata.orderNumber,
     cep: metadata.cep,
     endereco: metadata.endereco,
+    complemento: metadata.complemento, // <── ADICIONADO
     clerkUserId: metadata.clerkUserId,
     customerName: metadata.customerName,
     customerEmail: metadata.customerEmail,
@@ -84,10 +95,13 @@ export async function createMercadoPagoCheckout(
         pending: pendingUrl,
       },
       auto_return: 'approved',
+
+      // metadados gerais
       metadata: {
         clerkUserId: metadata.clerkUserId,
         cep: metadata.cep,
         endereco: metadata.endereco,
+        complemento: metadata.complemento, // <── ADICIONADO
       },
     },
   });
