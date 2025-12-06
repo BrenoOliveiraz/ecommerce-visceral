@@ -31,6 +31,7 @@ export default async function Home() {
       />
 
 
+
       <ProductsView products={products} />
       <Poster />
 
