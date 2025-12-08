@@ -29,6 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
       <div className="relative aspect-square w-full overflow-hidden">
         {Array.isArray(product.images) && product.images.length > 0 && (
           <Image
+            className="object-contain"
             src={imageUrl(product.images[0]).url()}
             alt={product.name || "Product Image"}
             fill
