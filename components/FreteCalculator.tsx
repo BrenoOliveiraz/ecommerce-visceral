@@ -21,13 +21,15 @@ export type FreteOption = {
 interface CalculoFreteProps {
   onSelectFrete?: (valorFrete: number) => void;
   onCepEncontrado?: (cep: string, endereco: string | null) => void;
+  onComplementoChange?: (complemento: string) => void;
 }
 
-export default function CalculoFrete({ onSelectFrete, onCepEncontrado  }: CalculoFreteProps) {
+export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplementoChange }: CalculoFreteProps) {
   const fromCep = "62508250";
-  const [toCep, setToCep] = useState(""); // dinâmico
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [endereco, setEndereco] = useState<string | null>(null); // dinâmico
+
+  const [toCep, setToCep] = useState("");
+  const [endereco, setEndereco] = useState<string | null>(null);
+  const [complemento, setComplemento] = useState("");
   const [resultado, setResultado] = useState<FreteOption[]>([]);
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
@@ -91,18 +93,26 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado  }: Calcul
     onSelectFrete?.(valor);
   };
 
-const handleCepEncontrado = (cep: string, endereco: string | null) => {
-  setToCep(cep);
-  setEndereco(endereco);
-  onCepEncontrado?.(cep, endereco); // 🔥 agora envia de volta ao BasketPage
-};
+  const handleCepEncontrado = (cep: string, endereco: string | null) => {
+    setToCep(cep);
+    setEndereco(endereco);
+    onCepEncontrado?.(cep, endereco);
+  };
+
+  const handleComplementoChange = (value: string) => {
+    setComplemento(value);
+    onComplementoChange?.(value);
+  };
 
   return (
     <div className="max-w-xl mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4 text-white">Cálculo de Frete</h1>
 
       <div className="flex flex-col gap-3 mb-6">
+        {/* Campo para CEP */}
         <BuscaCep onCepEncontrado={handleCepEncontrado} />
+
+        {/* Botão para calcular frete */}
         <button
           onClick={calcularFrete}
           disabled={loading || toCep.length !== 8}
@@ -110,10 +120,28 @@ const handleCepEncontrado = (cep: string, endereco: string | null) => {
         >
           {loading ? "Calculando..." : "Calcular Frete"}
         </button>
+
+        {/* Campo para complemento / número aparece apenas se o endereço estiver definido */}
+        {endereco && (
+          <div className="flex flex-col gap-2 mt-4">
+            <label className="text-gray-200 font-medium" htmlFor="complemento">
+              Número / Complemento
+            </label>
+            <input
+              id="complemento"
+              type="text"
+              value={complemento}
+              onChange={(e) => handleComplementoChange(e.target.value)}
+              placeholder="Ex: Apt 101, Casa 12"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
+            />
+          </div>
+        )}
       </div>
 
-      {erro && <p className="text-red-500">{erro}</p>}
+      {erro && <p className="text-red-500 mb-4">{erro}</p>}
 
+      {/* Lista de opções de frete */}
       <div className="space-y-4">
         {resultado.map((item) => {
           const valor = parseFloat(item.price);
