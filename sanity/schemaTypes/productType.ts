@@ -1,9 +1,9 @@
 import { TrolleyIcon } from "@sanity/icons";
-import { defineField, defineType, validation } from "sanity";
+import { defineField, defineType } from "sanity";
 
 export const productType = defineType({
   name: 'product',
-  title: 'Products ',
+  title: 'Products',
   type: 'document',
   icon: TrolleyIcon,
   fields: [
@@ -19,18 +19,16 @@ export const productType = defineType({
       type: 'slug',
       options: {
         source: 'name',
-        maxLength: 96
+        maxLength: 96,
       },
       validation: (Rule) => Rule.required(),
     }),
     defineField({
-      name: 'image',
-      title: 'Product image',
-      type: 'image',
-      options: {
-        hotspot: true,
-      },
-      validation: (Rule) => Rule.required(),
+      name: 'images',
+      title: 'Product Images',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+      validation: (Rule) => Rule.required().min(1),
     }),
     defineField({
       name: 'description',
@@ -69,33 +67,30 @@ export const productType = defineType({
       name: 'stockP',
       title: 'Stock P',
       type: 'number',
-    
     }),
     defineField({
       name: 'stockM',
       title: 'Stock M',
       type: 'number',
-  
     }),
     defineField({
       name: 'stockG',
       title: 'Stock G',
       type: 'number',
-
     }),
   ],
   preview: {
     select: {
       title: 'name',
-      media: 'image',
-      subtitle: 'price'
+      media: 'images.0', // pega a primeira imagem do array
+      subtitle: 'price',
     },
     prepare(select) {
       return {
         title: select.title,
         subtitle: `$${select.subtitle}`,
         media: select.media,
-      }
-    }
-  }
-})
+      };
+    },
+  },
+});

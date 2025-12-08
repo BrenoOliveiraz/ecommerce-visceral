@@ -17,15 +17,16 @@ export default async function Home() {
       <BannerS1
         images={[
           // { src: "/banner-ash-desktop.jpeg", alt: "BANNER ASH" },
-          { src: "/banner-desktop-camisa.jpeg", alt: "BANNER ASH2 " },
-          { src: "/banner-ash-desktop.jpeg", alt: "BANNER INICIO " },
+          { src: "/BannerDefinitivoDesktop.jpeg", alt: "BANNER ASH2 " },
+          { src: "/BannerDefinitivoDesktop2.jpeg", alt: "BANNER INICIO " },
           { src: "/banner-3.jpg", alt: "BANNER INICIO " },
         ]}
 
         imagesMD={[
-          { src: "/banner-ash-cel.jpeg", alt: "Banner 1" },
-          { src: "/banner-ash2-cel.jpeg", alt: "Banner 2" },
-          { src: "/celular-3.jpg", alt: "Banner 3" },
+          { src: "/BannerCelularDefinitivo.jpeg", alt: "Banner 1" },
+          { src: "/BannerCelularDefinitivo2.jpeg", alt: "Banner 2" },
+          { src: "/BannerCelularDefinitivo3.jpeg", alt: "Banner 3" },
+        
         ]}
 
       />

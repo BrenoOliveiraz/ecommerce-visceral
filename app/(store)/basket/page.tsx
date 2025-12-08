@@ -19,6 +19,7 @@ export type Metadata = {
   clerkUserId: string;
   cep: string;
   endereco: string | null;
+  complemento: string;
 };
 
 export type Size = 'P' | 'M' | 'G' | undefined;
@@ -40,6 +41,7 @@ export default function BasketPage() {
   const [valorFrete, setValorFrete] = useState(0);
   const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState<string | null>(null);
+  const [complemento, setComplemento] = useState("");
 
   useEffect(() => {
     setIsClient(true);
@@ -59,6 +61,16 @@ export default function BasketPage() {
   const handleCheckout = async () => {
     if (!isSignedIn) return;
 
+    if (!complemento.trim()) {
+      alert("Por favor, preencha o número / complemento.");
+      return;
+    }
+
+    if (valorFrete <= 0) {
+      alert("Por favor, selecione um frete antes de continuar.");
+      return;
+    }
+
     setIsLoading(true);
     try {
       const metadata: Metadata = {
@@ -68,6 +80,7 @@ export default function BasketPage() {
         clerkUserId: user!.id,
         cep,
         endereco: endereco ?? "Não informado",
+        complemento: complemento ?? "",
       };
 
       const checkoutUrl = await createMercadoPagoCheckout(
@@ -119,10 +132,10 @@ export default function BasketPage() {
                 }}
               >
                 <div className="w-20 h-20 sm:w-24 sm:h-24 flex-shrink-0 mr-4">
-                  {item.product.image && (
+                  {Array.isArray(item.product.images) && item.product.images[0] && (
                     <Image
-                      src={imageUrl(item.product.image).url()}
-                      alt={item.product.name ?? 'Product image'}
+                      src={imageUrl(item.product.images[0]).url()}
+                      alt={item.product.name ?? "Product image"}
                       className="w-full h-full object-cover rounded"
                       width={96}
                       height={96}
@@ -177,12 +190,13 @@ export default function BasketPage() {
           <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
 
           <div className="mb-6">
-            <CalculoFrete 
+            <CalculoFrete
               onSelectFrete={(valor) => setValorFrete(valor)}
-              onCepEncontrado={(ce, en)=> {
+              onCepEncontrado={(ce, en) => {
                 setEndereco(en);
                 setCep(ce);
               }}
+              onComplementoChange={(value) => setComplemento(value)}
             />
           </div>
 
@@ -208,12 +222,21 @@ export default function BasketPage() {
             </p>
           </div>
 
+          {(!complemento.trim() || valorFrete <= 0) && (
+            <p className="text-yellow-400 text-sm mb-2">
+              Por favor, preencha todos os campos antes de prosseguir.
+            </p>
+          )}
+
+
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading}
+              disabled={isLoading || !complemento.trim() || valorFrete <= 0} // complemento e frete obrigatórios
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-                ${isLoading ? 'bg-gray-700 text-gray-400' : 'bg-red-600 hover:bg-red-700 text-white'}
+                ${isLoading || !complemento.trim() || valorFrete <= 0
+                  ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
+                  : 'bg-red-600 hover:bg-red-700 text-white'}
               `}
             >
               {isLoading ? "Processando..." : "Finalizar compra"}

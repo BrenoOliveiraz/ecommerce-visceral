@@ -83,6 +83,7 @@ export type Order = {
   email?: string;
   cep?: string;
   endereco?: string;
+  complemento?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -110,7 +111,7 @@ export type Product = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  image?: {
+  images?: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -121,7 +122,8 @@ export type Product = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -410,6 +412,7 @@ export type MY_ORDERS_QUERYResult = Array<{
   email?: string;
   cep?: string;
   endereco?: string;
+  complemento?: string;
   products: Array<{
     product: {
       _id: string;
@@ -419,7 +422,7 @@ export type MY_ORDERS_QUERYResult = Array<{
       _rev: string;
       name?: string;
       slug?: Slug;
-      image?: {
+      images?: Array<{
         asset?: {
           _ref: string;
           _type: "reference";
@@ -430,7 +433,8 @@ export type MY_ORDERS_QUERYResult = Array<{
         hotspot?: SanityImageHotspot;
         crop?: SanityImageCrop;
         _type: "image";
-      };
+        _key: string;
+      }>;
       description?: Array<{
         children?: Array<{
           marks?: Array<string>;
@@ -574,7 +578,7 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
   _rev: string;
   name?: string;
   slug?: Slug;
-  image?: {
+  images?: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -585,7 +589,8 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -704,7 +709,7 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   _rev: string;
   name?: string;
   slug?: Slug;
-  image?: {
+  images?: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -715,7 +720,8 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -834,7 +840,7 @@ export type PRODUCT_BY_ID_QUERYResult = {
   _rev: string;
   name?: string;
   slug?: Slug;
-  image?: {
+  images?: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -845,7 +851,8 @@ export type PRODUCT_BY_ID_QUERYResult = {
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;
@@ -964,7 +971,7 @@ export type PRODUCT_SEARCH_QUERYResult = Array<{
   _rev: string;
   name?: string;
   slug?: Slug;
-  image?: {
+  images?: Array<{
     asset?: {
       _ref: string;
       _type: "reference";
@@ -975,7 +982,8 @@ export type PRODUCT_SEARCH_QUERYResult = Array<{
     hotspot?: SanityImageHotspot;
     crop?: SanityImageCrop;
     _type: "image";
-  };
+    _key: string;
+  }>;
   description?: Array<{
     children?: Array<{
       marks?: Array<string>;

@@ -22,7 +22,6 @@ export async function POST(req: NextRequest) {
     const action = body.action;
     const paymentId = body.data.id;
 
-    if (!paymentId) return NextResponse.json({ ok: true });
     if (action !== "payment.created" && action !== "payment.updated") {
       return NextResponse.json({ ok: true });
     }
@@ -38,9 +37,7 @@ export async function POST(req: NextRequest) {
 
     if (data.status !== "approved") return NextResponse.json({ ok: true });
 
-    // ============================================
-    // 🔥 Agora é JSON — sempre confiável
-    // ============================================
+    // parse external_reference
     let ref: any = {};
     try {
       ref = JSON.parse(data.external_reference);
@@ -50,7 +47,6 @@ export async function POST(req: NextRequest) {
     }
 
     const orderNumber = ref.orderNumber;
-
     if (!orderNumber) return NextResponse.json({ ok: true });
 
     const existingOrder = await backendClient.fetch(
@@ -69,11 +65,10 @@ export async function POST(req: NextRequest) {
       size: item.category_id || null,
     }));
 
-    // ============================================
-    // 🔥 Dados SEMPRE retornados do external_reference
-    // ============================================
+    // dados vindos do external_reference
     const cepFinal = ref.cep || "Não informado";
     const enderecoFinal = ref.endereco || "Não informado";
+    const complementoFinal = ref.complemento || "Não informado"; // <── ADICIONADO
 
     await backendClient.create({
       _type: "order",
@@ -86,6 +81,7 @@ export async function POST(req: NextRequest) {
       email: ref.customerEmail,
       cep: cepFinal,
       endereco: enderecoFinal,
+      complemento: complementoFinal, // <── ADICIONADO
       currency: data.currency_id,
       totalPrice: data.transaction_amount,
       amountDiscount: 0,
@@ -94,7 +90,7 @@ export async function POST(req: NextRequest) {
       products: sanityProducts,
     });
 
-    // Atualizar estoque
+    // atualizar estoque
     for (const item of sanityProducts) {
       const productId = item.product._ref;
       const quantity = item.quantity;
