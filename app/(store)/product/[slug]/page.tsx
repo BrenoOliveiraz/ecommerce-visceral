@@ -73,14 +73,14 @@ export default async function ProductPage({
               <p>
                 Observe que as <strong>pré-vendas</strong> ficarão disponíveis por um período de{" "}
                 <strong>5 dias</strong> e, após o encerramento das vendas, o envio ocorre em até{" "}
-                <strong>15 dias úteis</strong>.
+                <strong>10 dias úteis</strong>.
               </p>
               <p className="mt-3">
                 Por favor, leia isto antes de fazer o pedido. Obrigado.
               </p>
               <p className="mt-3 font-medium">
                 Envios da pré-venda iniciam-se a partir do dia{" "}
-                <strong>5 de Dezembro</strong>.
+                <strong>16 de Dezembro</strong>.
               </p>
             </div>
           </div>
