@@ -121,22 +121,6 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
           {loading ? "Calculando..." : "Calcular Frete"}
         </button>
 
-        {/* Campo para complemento / número aparece apenas se o endereço estiver definido */}
-        {endereco && (
-          <div className="flex flex-col gap-2 mt-4">
-            <label className="text-gray-200 font-medium" htmlFor="complemento">
-              Número / Complemento
-            </label>
-            <input
-              id="complemento"
-              type="text"
-              value={complemento}
-              onChange={(e) => handleComplementoChange(e.target.value)}
-              placeholder="Ex: Apt 101, Casa 12"
-              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
-            />
-          </div>
-        )}
       </div>
 
       {erro && <p className="text-red-500 mb-4">{erro}</p>}

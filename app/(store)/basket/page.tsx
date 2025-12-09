@@ -72,10 +72,7 @@ export default function BasketPage() {
       return;
     }
 
-    if (valorFrete <= 0) {
-      alert("Por favor, selecione um frete antes de continuar.");
-      return;
-    }
+
 
     setIsLoading(true);
     try {
@@ -198,7 +195,7 @@ export default function BasketPage() {
 
         {/* RESUMO DO CLIENTE - APENAS QUANDO ENDEREÇO EXISTIR */}
         {endereco && (
-          <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-blue-600 rounded-lg shadow-lg order-last max-h-96 ">
+          <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-blue-600 rounded-lg shadow-lg order-last  ">
             <h3 className="text-xl font-semibold text-white mb-4">Resumo do cliente</h3>
 
             <label className="text-gray-200 font-medium" htmlFor="cpf">
@@ -223,7 +220,7 @@ export default function BasketPage() {
             <input
               id="nomecompleto"
               type="text"
-              value={cpf}
+              value={nomeCompleto}
               onChange={(e) => setNomeCompleto(e.target.value)}
               placeholder="Digite seu nome completo"
               className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
@@ -238,10 +235,22 @@ export default function BasketPage() {
             <input
               id="numerocontato"
               type="text"
-              value={cpf}
+              value={numeroContato}
               onChange={(e) => setNumeroContato(e.target.value)}
-              placeholder="Digite seu nome completo"
+              placeholder="Numero com DDD"
               className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
+            />
+
+            <label className="text-gray-200 font-medium mt-6" htmlFor="complemento">
+              Número / Complemento
+            </label>
+            <input
+              id="complemento"
+              type="text"
+              value={complemento}
+              onChange={(e) => setComplemento(e.target.value)}
+              placeholder="Ex: Apt 101, Casa 12"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
             />
           </div>
         )}
@@ -287,7 +296,7 @@ export default function BasketPage() {
             </p>
           </div>
 
-          {(!complemento.trim() || valorFrete <= 0) && (
+          {(!complemento.trim() ) && (
             <p className="text-yellow-400 text-sm mb-2">
               Por favor, preencha todos os campos antes de prosseguir.
             </p>
@@ -296,9 +305,9 @@ export default function BasketPage() {
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || !complemento.trim() || valorFrete <= 0}
+              disabled={isLoading || !complemento.trim() }
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-                ${isLoading || !complemento.trim() || valorFrete <= 0
+                ${isLoading || !complemento.trim() 
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                   : 'bg-red-600 hover:bg-red-700 text-white'}
               `}
