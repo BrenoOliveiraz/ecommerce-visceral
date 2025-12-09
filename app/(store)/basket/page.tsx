@@ -20,6 +20,9 @@ export type Metadata = {
   cep: string;
   endereco: string | null;
   complemento: string;
+  cpf: string;
+  nomeCompleto: string;
+  numeroContato: string;
 };
 
 export type Size = 'P' | 'M' | 'G' | undefined;
@@ -42,6 +45,9 @@ export default function BasketPage() {
   const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState<string | null>(null);
   const [complemento, setComplemento] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [nomeCompleto, setNomeCompleto] = useState("");
+  const [numeroContato, setNumeroContato] = useState("");
 
   useEffect(() => {
     setIsClient(true);
@@ -81,6 +87,9 @@ export default function BasketPage() {
         cep,
         endereco: endereco ?? "Não informado",
         complemento: complemento ?? "",
+        cpf,
+        nomeCompleto,
+        numeroContato
       };
 
       const checkoutUrl = await createMercadoPagoCheckout(
@@ -98,6 +107,8 @@ export default function BasketPage() {
       setIsLoading(false);
     }
   };
+
+
 
   const getStockForSize = (product: Product, size?: Size): number => {
     switch (size) {
@@ -185,20 +196,74 @@ export default function BasketPage() {
           </div>
         </div>
 
-        {/* RESUMO DO PEDIDO */}
-        <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg order-last lg:sticky lg:top-4">
-          <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
+        {/* RESUMO DO CLIENTE - APENAS QUANDO ENDEREÇO EXISTIR */}
+        {endereco && (
+          <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-blue-600 rounded-lg shadow-lg order-last max-h-96 ">
+            <h3 className="text-xl font-semibold text-white mb-4">Resumo do cliente</h3>
 
-          <div className="mb-6">
-            <CalculoFrete
-              onSelectFrete={(valor) => setValorFrete(valor)}
-              onCepEncontrado={(ce, en) => {
-                setEndereco(en);
-                setCep(ce);
-              }}
-              onComplementoChange={(value) => setComplemento(value)}
+            <label className="text-gray-200 font-medium" htmlFor="cpf">
+              CPF
+            </label>
+            <input
+              id="cpf"
+              type="text"
+              value={cpf}
+              onChange={(e) => setCpf(e.target.value)}
+              placeholder="000.000.000-00"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
+            />
+
+            <label
+              className="block text-gray-200 font-medium mt-6"
+              htmlFor="nomecompleto"
+            >
+              Nome Completo
+            </label>
+
+            <input
+              id="nomecompleto"
+              type="text"
+              value={cpf}
+              onChange={(e) => setNomeCompleto(e.target.value)}
+              placeholder="Digite seu nome completo"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
+            />
+            <label
+              className="block text-gray-200 font-medium mt-6"
+              htmlFor="numerocontato"
+            >
+              Numero para Contato
+            </label>
+
+            <input
+              id="numerocontato"
+              type="text"
+              value={cpf}
+              onChange={(e) => setNumeroContato(e.target.value)}
+              placeholder="Digite seu nome completo"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
             />
           </div>
+        )}
+
+        {/* RESUMO DO PEDIDO */}
+        <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg order-2 lg:sticky lg:top-4">
+          <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
+
+          <>
+            <div className="mb-6">
+              <CalculoFrete
+                onSelectFrete={(valor) => setValorFrete(valor)}
+                onCepEncontrado={(ce, en) => {
+                  setEndereco(en);
+                  setCep(ce);
+                }}
+                onComplementoChange={(value) => setComplemento(value)}
+              />
+            </div>
+
+
+          </>
 
           <div className="space-y-2 text-gray-300">
             <p className="flex justify-between">
@@ -228,11 +293,10 @@ export default function BasketPage() {
             </p>
           )}
 
-
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || !complemento.trim() || valorFrete <= 0} // complemento e frete obrigatórios
+              disabled={isLoading || !complemento.trim() || valorFrete <= 0}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
                 ${isLoading || !complemento.trim() || valorFrete <= 0
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'

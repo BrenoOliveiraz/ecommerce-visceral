@@ -61,13 +61,31 @@ export const orderType = defineType({
       type: 'string',
       validation: (Rule) => Rule.required(),
     }),
-
-    // 🔥 ADICIONADO — COMPLEMENTO
     defineField({
       name: 'complemento',
       title: 'Complemento',
       type: 'string',
       validation: (Rule) => Rule.required().error("Complemento é obrigatório"),
+    }),
+
+    // 🔥 NOVOS CAMPOS
+    defineField({
+      name: 'nomeCompleto',
+      title: 'Nome Completo',
+      type: 'string',
+      validation: (Rule) => Rule.required().error("Nome completo é obrigatório"),
+    }),
+    defineField({
+      name: 'numeroContato',
+      title: 'Número para Contato',
+      type: 'string',
+      validation: (Rule) => Rule.required().error("Número para contato é obrigatório"),
+    }),
+    defineField({
+      name: 'cpf',
+      title: 'CPF',
+      type: 'string',
+      validation: (Rule) => Rule.required().error("CPF é obrigatório"),
     }),
 
     defineField({

@@ -84,6 +84,9 @@ export type Order = {
   cep?: string;
   endereco?: string;
   complemento?: string;
+  nomeCompleto?: string;
+  numeroContato?: string;
+  cpf?: string;
   products?: Array<{
     product?: {
       _ref: string;
@@ -413,6 +416,9 @@ export type MY_ORDERS_QUERYResult = Array<{
   cep?: string;
   endereco?: string;
   complemento?: string;
+  nomeCompleto?: string;
+  numeroContato?: string;
+  cpf?: string;
   products: Array<{
     product: {
       _id: string;

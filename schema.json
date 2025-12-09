@@ -453,6 +453,27 @@
         },
         "optional": true
       },
+      "nomeCompleto": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "numeroContato": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "cpf": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "products": {
         "type": "objectAttribute",
         "value": {

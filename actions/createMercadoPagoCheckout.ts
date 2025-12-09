@@ -12,6 +12,8 @@ export type Metadata = {
   cep: string;
   endereco: string | null;
   complemento: string;
+  nomeCompleto: string;
+  numeroContato: string;
 };
 
 export type GroupBasketItem = {
@@ -46,12 +48,14 @@ export async function createMercadoPagoCheckout(
       unit_price: Number(item.product.price!.toFixed(2)),
       category_id: item.size,
 
-      // metadados por item (opcional)
+      // metadados por item
       metadata: {
         size: item.size,
         cep: metadata.cep,
         endereco: metadata.endereco,
-        complemento: metadata.complemento, // <── ADICIONADO
+        complemento: metadata.complemento,
+        nomeCompleto: metadata.nomeCompleto,
+        numeroContato: metadata.numeroContato,
       }
     })),
     ...(valorFrete > 0 ? [{
@@ -64,17 +68,21 @@ export async function createMercadoPagoCheckout(
       metadata: {
         cep: metadata.cep,
         endereco: metadata.endereco,
-        complemento: metadata.complemento, // <── ADICIONADO
+        complemento: metadata.complemento,
+        nomeCompleto: metadata.nomeCompleto,
+        numeroContato: metadata.numeroContato,
       }
     }] : []),
   ];
 
-  // AGORA ENVIANDO COMPLEMENTO
+  // external reference com dados do cliente
   const externalRef = JSON.stringify({
     orderNumber: metadata.orderNumber,
     cep: metadata.cep,
     endereco: metadata.endereco,
-    complemento: metadata.complemento, // <── ADICIONADO
+    complemento: metadata.complemento,
+    nomeCompleto: metadata.nomeCompleto,
+    numeroContato: metadata.numeroContato,
     clerkUserId: metadata.clerkUserId,
     customerName: metadata.customerName,
     customerEmail: metadata.customerEmail,
@@ -101,7 +109,9 @@ export async function createMercadoPagoCheckout(
         clerkUserId: metadata.clerkUserId,
         cep: metadata.cep,
         endereco: metadata.endereco,
-        complemento: metadata.complemento, // <── ADICIONADO
+        complemento: metadata.complemento,
+        nomeCompleto: metadata.nomeCompleto,
+        numeroContato: metadata.numeroContato,
       },
     },
   });
