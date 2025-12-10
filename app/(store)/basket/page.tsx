@@ -17,7 +17,7 @@ export type Metadata = {
   customerName: string;
   customerEmail: string;
   clerkUserId: string;
-  cep: string;z
+  cep: string;
   endereco: string | null;
   complemento: string;
   cpf: string;
