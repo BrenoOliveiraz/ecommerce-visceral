@@ -17,7 +17,7 @@ export type Metadata = {
   customerName: string;
   customerEmail: string;
   clerkUserId: string;
-  cep: string;
+  cep: string;z
   endereco: string | null;
   complemento: string;
   cpf: string;
@@ -72,7 +72,7 @@ export default function BasketPage() {
       return;
     }
 
-
+    // ❌ Removida a trava do frete obrigatório
 
     setIsLoading(true);
     try {
@@ -92,7 +92,7 @@ export default function BasketPage() {
       const checkoutUrl = await createMercadoPagoCheckout(
         groupedItems,
         metadata,
-        valorFrete
+        valorFrete // frete opcional
       );
 
       if (checkoutUrl) {
@@ -105,8 +105,6 @@ export default function BasketPage() {
     }
   };
 
-
-
   const getStockForSize = (product: Product, size?: Size): number => {
     switch (size) {
       case 'P': return product.stockP ?? 0;
@@ -117,7 +115,7 @@ export default function BasketPage() {
   };
 
   const totalProdutos = useBasketStore.getState().getTotalPrice();
-  const totalGeral = totalProdutos + valorFrete;
+  const totalGeral = totalProdutos + (valorFrete > 0 ? valorFrete : 0);
 
   return (
     <div className="container mx-auto p-4 max-w-6xl">
@@ -193,9 +191,9 @@ export default function BasketPage() {
           </div>
         </div>
 
-        {/* RESUMO DO CLIENTE - APENAS QUANDO ENDEREÇO EXISTIR */}
+        {/* RESUMO DO CLIENTE */}
         {endereco && (
-          <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-blue-600 rounded-lg shadow-lg order-last  ">
+          <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-blue-600 rounded-lg shadow-lg order-last">
             <h3 className="text-xl font-semibold text-white mb-4">Resumo do cliente</h3>
 
             <label className="text-gray-200 font-medium" htmlFor="cpf">
@@ -210,39 +208,32 @@ export default function BasketPage() {
               className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
             />
 
-            <label
-              className="block text-gray-200 font-medium mt-6"
-              htmlFor="nomecompleto"
-            >
+            <label className="block text-gray-200 font-medium mt-6" htmlFor="nomecompleto">
               Nome Completo
             </label>
-
             <input
               id="nomecompleto"
               type="text"
               value={nomeCompleto}
               onChange={(e) => setNomeCompleto(e.target.value)}
               placeholder="Digite seu nome completo"
-              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
             />
-            <label
-              className="block text-gray-200 font-medium mt-6"
-              htmlFor="numerocontato"
-            >
-              Numero para Contato
-            </label>
 
+            <label className="block text-gray-200 font-medium mt-6" htmlFor="numerocontato">
+              Número para Contato
+            </label>
             <input
               id="numerocontato"
               type="text"
               value={numeroContato}
               onChange={(e) => setNumeroContato(e.target.value)}
-              placeholder="Numero com DDD"
-              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white "
+              placeholder="Número com DDD"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
             />
 
             <label className="text-gray-200 font-medium mt-6" htmlFor="complemento">
-              Número / Complemento
+              Número da Casa
             </label>
             <input
               id="complemento"
@@ -259,20 +250,16 @@ export default function BasketPage() {
         <div className="w-full lg:w-80 bg-zinc-900 p-6 border border-red-600 rounded-lg shadow-lg order-2 lg:sticky lg:top-4">
           <h3 className="text-xl font-semibold text-white mb-4">Resumo do pedido</h3>
 
-          <>
-            <div className="mb-6">
-              <CalculoFrete
-                onSelectFrete={(valor) => setValorFrete(valor)}
-                onCepEncontrado={(ce, en) => {
-                  setEndereco(en);
-                  setCep(ce);
-                }}
-                onComplementoChange={(value) => setComplemento(value)}
-              />
-            </div>
-
-
-          </>
+          <div className="mb-6">
+            <CalculoFrete
+              onSelectFrete={(valor) => setValorFrete(valor)}
+              onCepEncontrado={(ce, en) => {
+                setEndereco(en);
+                setCep(ce);
+              }}
+              onComplementoChange={(value) => setComplemento(value)}
+            />
+          </div>
 
           <div className="space-y-2 text-gray-300">
             <p className="flex justify-between">
@@ -296,18 +283,14 @@ export default function BasketPage() {
             </p>
           </div>
 
-          {(!complemento.trim() ) && (
-            <p className="text-yellow-400 text-sm mb-2">
-              Por favor, preencha todos os campos antes de prosseguir.
-            </p>
-          )}
+          {/* ❌ Removida a trava do frete obrigatório */}
 
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || !complemento.trim() }
+              disabled={isLoading || !complemento.trim()}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-                ${isLoading || !complemento.trim() 
+                ${isLoading || !complemento.trim()
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                   : 'bg-red-600 hover:bg-red-700 text-white'}
               `}
@@ -322,7 +305,6 @@ export default function BasketPage() {
             </SignInButton>
           )}
         </div>
-
       </div>
     </div>
   );

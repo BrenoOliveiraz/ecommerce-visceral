@@ -1,3 +1,5 @@
+
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
@@ -22,6 +24,7 @@ export async function POST(req: NextRequest) {
     const action = body.action;
     const paymentId = body.data.id;
 
+    if (!paymentId) return NextResponse.json({ ok: true });
     if (action !== "payment.created" && action !== "payment.updated") {
       return NextResponse.json({ ok: true });
     }
@@ -37,7 +40,9 @@ export async function POST(req: NextRequest) {
 
     if (data.status !== "approved") return NextResponse.json({ ok: true });
 
-    // parse external_reference
+    // ============================================
+    // 🔥 Agora é JSON — sempre confiável
+    // ============================================
     let ref: any = {};
     try {
       ref = JSON.parse(data.external_reference);
@@ -47,6 +52,7 @@ export async function POST(req: NextRequest) {
     }
 
     const orderNumber = ref.orderNumber;
+
     if (!orderNumber) return NextResponse.json({ ok: true });
 
     const existingOrder = await backendClient.fetch(
@@ -65,10 +71,13 @@ export async function POST(req: NextRequest) {
       size: item.category_id || null,
     }));
 
-    // dados vindos do external_reference
+    // ============================================
+    // 🔥 Dados SEMPRE retornados do external_reference
+    // ============================================
     const cepFinal = ref.cep || "Não informado";
     const enderecoFinal = ref.endereco || "Não informado";
-    const complementoFinal = ref.complemento || "Não informado"; // <── ADICIONADO
+    const complementoFinal = ref.complemento || "Não informado";
+    const cpfFinal = ref.cpf || "Não informado";
 
     await backendClient.create({
       _type: "order",
@@ -76,12 +85,12 @@ export async function POST(req: NextRequest) {
       mercadoPagoPaymentId: data.id,
       mercadoPagoPayerId: data.payer?.id,
       mercadoPagoPreferenceId: data.order?.id || null,
-      customerName: ref.customerName,
-      clerkUserId: ref.clerkUserId,
+      nomeCompleto: data.nomeCompleto?.id || null,
+      cpf: cpfFinal,
       email: ref.customerEmail,
       cep: cepFinal,
       endereco: enderecoFinal,
-      complemento: complementoFinal, // <── ADICIONADO
+      complemento: complementoFinal,
       currency: data.currency_id,
       totalPrice: data.transaction_amount,
       amountDiscount: 0,
@@ -90,7 +99,7 @@ export async function POST(req: NextRequest) {
       products: sanityProducts,
     });
 
-    // atualizar estoque
+    // Atualizar estoque
     for (const item of sanityProducts) {
       const productId = item.product._ref;
       const quantity = item.quantity;

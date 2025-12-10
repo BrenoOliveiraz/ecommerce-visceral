@@ -6,14 +6,15 @@ import { imageUrl } from '@/lib/imageUrl';
 
 export type Metadata = {
   orderNumber: string;
-  customerName: string;
+  nomeCompleto: string;
   customerEmail: string;
-  clerkUserId: string;
+  cpf: string;
   cep: string;
   endereco: string | null;
-  complemento: string;
-  nomeCompleto: string;
-  numeroContato: string;
+  complemento: string | null;
+
+
+
 };
 
 export type GroupBasketItem = {
@@ -26,6 +27,7 @@ export async function createMercadoPagoCheckout(
   items: GroupBasketItem[],
   metadata: Metadata,
   valorFrete: number
+
 ) {
   const rawBaseUrl = process.env.BASE_URL || process.env.NEXT_PUBLIC_BASE_URL;
   if (!rawBaseUrl || !/^https?:\/\//.test(rawBaseUrl)) throw new Error("BASE_URL inválida.");
@@ -36,26 +38,23 @@ export async function createMercadoPagoCheckout(
   const failureUrl = `${baseUrl}/basket`;
   const pendingUrl = `${baseUrl}/basket`;
 
-  // produtos + frete
+  // Usando metadata dinamicamente
   const itemsComFrete = [
     ...items.map(item => ({
       id: item.product._id,
       title: item.product.name || 'Produto sem nome',
       description: `Tamanho: ${item.size ?? 'N/A'}`,
-      picture_url: item.product.images ? imageUrl(item.product.images).url() : 'https://via.placeholder.com/150',
+      picture_url: item.product.images ? imageUrl(item.product.images[0]).url() : 'https://via.placeholder.com/150',
       quantity: Number(item.quantity),
       currency_id: 'BRL',
       unit_price: Number(item.product.price!.toFixed(2)),
       category_id: item.size,
-
-      // metadados por item
       metadata: {
         size: item.size,
         cep: metadata.cep,
         endereco: metadata.endereco,
         complemento: metadata.complemento,
-        nomeCompleto: metadata.nomeCompleto,
-        numeroContato: metadata.numeroContato,
+        cpf: metadata.cpf,
       }
     })),
     ...(valorFrete > 0 ? [{
@@ -65,34 +64,25 @@ export async function createMercadoPagoCheckout(
       quantity: 1,
       currency_id: 'BRL',
       unit_price: valorFrete,
-      metadata: {
-        cep: metadata.cep,
-        endereco: metadata.endereco,
-        complemento: metadata.complemento,
-        nomeCompleto: metadata.nomeCompleto,
-        numeroContato: metadata.numeroContato,
-      }
     }] : []),
   ];
 
-  // external reference com dados do cliente
   const externalRef = JSON.stringify({
     orderNumber: metadata.orderNumber,
     cep: metadata.cep,
     endereco: metadata.endereco,
-    complemento: metadata.complemento,
+
     nomeCompleto: metadata.nomeCompleto,
-    numeroContato: metadata.numeroContato,
-    clerkUserId: metadata.clerkUserId,
-    customerName: metadata.customerName,
     customerEmail: metadata.customerEmail,
+    complemento: metadata.complemento,
+    cpf: metadata.cpf
   });
 
   const response = await preference.create({
     body: {
       items: itemsComFrete,
       payer: {
-        name: metadata.customerName,
+        name: metadata.nomeCompleto,
         email: metadata.customerEmail,
       },
       external_reference: externalRef,
@@ -103,15 +93,12 @@ export async function createMercadoPagoCheckout(
         pending: pendingUrl,
       },
       auto_return: 'approved',
-
-      // metadados gerais
       metadata: {
-        clerkUserId: metadata.clerkUserId,
+
         cep: metadata.cep,
         endereco: metadata.endereco,
         complemento: metadata.complemento,
-        nomeCompleto: metadata.nomeCompleto,
-        numeroContato: metadata.numeroContato,
+        cpf: metadata.cpf
       },
     },
   });

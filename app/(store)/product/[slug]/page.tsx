@@ -65,8 +65,8 @@ export default async function ProductPage({
               Design por — {product.design}
             </p>
 
-            {/* Tabela de tamanhos */}
-            <SizeChartModal />
+           
+            {/* <SizeChartModal /> */}
 
             {/* Aviso de pré-venda */}
             <div className="mt-10 bg-red-950 border-l-4 border-yellow-500 text-white p-5 rounded-lg text-sm leading-relaxed shadow-sm">
