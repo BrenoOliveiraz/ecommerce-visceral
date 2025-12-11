@@ -41,28 +41,28 @@ export async function POST(req: NextRequest) {
     if (data.status !== "approved") return NextResponse.json({ ok: true });
 
     // ============================================
-    // 🔥 Agora é JSON — sempre confiável
+    // Usar JSON do external_reference, se existir
     // ============================================
     let ref: any = {};
     try {
-      ref = JSON.parse(data.external_reference);
+      ref = JSON.parse(data.external_reference || "{}");
     } catch {
       console.error("Erro ao parsear external_reference");
-      return NextResponse.json({ ok: true });
+      ref = {};
     }
 
-    const orderNumber = ref.orderNumber;
+    // Se não houver orderNumber, usar o ID do pagamento como identificador
+    const internalOrderId = ref.orderNumber || data.id;
 
-    if (!orderNumber) return NextResponse.json({ ok: true });
-
+    // Checar se o pedido já existe no banco
     const existingOrder = await backendClient.fetch(
-      `*[_type == "order" && orderNumber == $orderNumber][0]`,
-      { orderNumber }
+      `*[_type == "order" && mercadoPagoPaymentId == $id][0]`,
+      { id: internalOrderId }
     );
 
     if (existingOrder) return NextResponse.json({ ok: true });
 
-    const items = data.additional_info.items;
+    const items = data.additional_info.items || [];
 
     const sanityProducts = items.map((item: any) => ({
       _key: crypto.randomUUID(),
@@ -71,9 +71,7 @@ export async function POST(req: NextRequest) {
       size: item.category_id || null,
     }));
 
-    // ============================================
-    // 🔥 Dados SEMPRE retornados do external_reference
-    // ============================================
+    // Usar dados do external_reference ou fallback
     const cepFinal = ref.cep || "Não informado";
     const enderecoFinal = ref.endereco || "Não informado";
     const complementoFinal = ref.complemento || "Não informado";
@@ -81,16 +79,17 @@ export async function POST(req: NextRequest) {
 
     await backendClient.create({
       _type: "order",
-      orderNumber,
+      orderNumber: internalOrderId, // agora sempre existe
       mercadoPagoPaymentId: data.id,
       mercadoPagoPayerId: data.payer?.id,
       mercadoPagoPreferenceId: data.order?.id || null,
-      nomeCompleto: data.nomeCompleto?.id || null,
+      nomeCompleto: ref.nomeCompleto || "Não informado",
       cpf: cpfFinal,
-      email: ref.customerEmail,
+      email: ref.customerEmail || "Não informado",
       cep: cepFinal,
       endereco: enderecoFinal,
       complemento: complementoFinal,
+      numeroContato: ref.numeroContato || "Não informado",
       currency: data.currency_id,
       totalPrice: data.transaction_amount,
       amountDiscount: 0,
@@ -124,9 +123,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ ok: true });
-
   } catch (error) {
     console.error("🔥 Erro no webhook Mercado Pago:", error);
     return NextResponse.json({ ok: true });
   }
 }
+

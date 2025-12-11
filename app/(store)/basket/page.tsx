@@ -44,10 +44,12 @@ export default function BasketPage() {
   const [valorFrete, setValorFrete] = useState(0);
   const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState<string | null>(null);
-  const [complemento, setComplemento] = useState("");
   const [cpf, setCpf] = useState("");
   const [nomeCompleto, setNomeCompleto] = useState("");
   const [numeroContato, setNumeroContato] = useState("");
+  const [ap, setAp] = useState('');
+  const [casa, setCasa] = useState('')
+  
 
   useEffect(() => {
     setIsClient(true);
@@ -64,46 +66,47 @@ export default function BasketPage() {
     );
   }
 
-  const handleCheckout = async () => {
-    if (!isSignedIn) return;
+const handleCheckout = async () => {
+  if (!isSignedIn) return;
 
-    if (!complemento.trim()) {
-      alert("Por favor, preencha o número / complemento.");
-      return;
+  const complementoAtual = casa + " Ap/Casa " + ap; // monta localmente
+
+  if (!complementoAtual.trim()) {
+    alert("Por favor, preencha o número / complemento.");
+    return;
+  }
+
+  setIsLoading(true);
+  try {
+    const metadata: Metadata = {
+      orderNumber: crypto.randomUUID(),
+      customerName: user?.fullName ?? 'Unknown',
+      customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
+      clerkUserId: user!.id,
+      cep,
+      endereco: endereco ?? "Não informado",
+      complemento: complementoAtual,
+      cpf,
+      nomeCompleto,
+      numeroContato
+    };
+
+    const checkoutUrl = await createMercadoPagoCheckout(
+      groupedItems,
+      metadata,
+      valorFrete
+    );
+
+    if (checkoutUrl) {
+      window.location.href = checkoutUrl;
     }
+  } catch (error) {
+    console.error('Error creating checkout session', error);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-    // ❌ Removida a trava do frete obrigatório
-
-    setIsLoading(true);
-    try {
-      const metadata: Metadata = {
-        orderNumber: crypto.randomUUID(),
-        customerName: user?.fullName ?? 'Unknown',
-        customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
-        clerkUserId: user!.id,
-        cep,
-        endereco: endereco ?? "Não informado",
-        complemento: complemento ?? "",
-        cpf,
-        nomeCompleto,
-        numeroContato
-      };
-
-      const checkoutUrl = await createMercadoPagoCheckout(
-        groupedItems,
-        metadata,
-        valorFrete // frete opcional
-      );
-
-      if (checkoutUrl) {
-        window.location.href = checkoutUrl;
-      }
-    } catch (error) {
-      console.error('Error creating checkout session', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const getStockForSize = (product: Product, size?: Size): number => {
     switch (size) {
@@ -212,15 +215,16 @@ export default function BasketPage() {
               Nome Completo
             </label>
             <input
+              
               id="nomecompleto"
               type="text"
               value={nomeCompleto}
               onChange={(e) => setNomeCompleto(e.target.value)}
               placeholder="Digite seu nome completo"
-              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
+              className="p-2 rounded border border-gray-700 bg-zinc-800 text-white mb-6"
             />
 
-            <label className="block text-gray-200 font-medium mt-6" htmlFor="numerocontato">
+            {/* <label className="block text-gray-200 font-medium mt-6" htmlFor="numerocontato">
               Número para Contato
             </label>
             <input
@@ -230,19 +234,42 @@ export default function BasketPage() {
               onChange={(e) => setNumeroContato(e.target.value)}
               placeholder="Número com DDD"
               className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
-            />
+            /> */}
 
-            <label className="text-gray-200 font-medium mt-6" htmlFor="complemento">
-              Número da Casa
+            <label className="text-gray-200 font-medium mt-6" htmlFor="casa">
+              Número / Apartamento
             </label>
+            <div className="flex items-center space-x-2">
+              <input
+                id="casa"
+                type="text"
+                value={casa}
+                onChange={(e) => setCasa(e.target.value)}
+                placeholder="Número"
+                className="p-2 rounded border border-gray-700 bg-zinc-800 text-white w-24"
+              />
+              <span className="text-gray-200">/</span>
+              <input
+                id="apt"
+                type="text"
+                value={ap}
+                onChange={(e) => setAp(e.target.value)}
+                placeholder="Apt"
+                className="p-2 rounded border border-gray-700 bg-zinc-800 text-white w-24"
+              />
+            </div>
+
+            {/* <label className="text-gray-200 font-medium mt-6" htmlFor="ap">
+              Número do Ap
+             </label>
             <input
-              id="complemento"
+              id="ap"
               type="text"
-              value={complemento}
-              onChange={(e) => setComplemento(e.target.value)}
+              value={ap}
+              onChange={(e) => setAp(e.target.value)}
               placeholder="Ex: Apt 101, Casa 12"
               className="p-2 rounded border border-gray-700 bg-zinc-800 text-white"
-            />
+            /> */}
           </div>
         )}
 
@@ -257,7 +284,7 @@ export default function BasketPage() {
                 setEndereco(en);
                 setCep(ce);
               }}
-              onComplementoChange={(value) => setComplemento(value)}
+          
             />
           </div>
 
@@ -288,9 +315,9 @@ export default function BasketPage() {
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || !complemento.trim()}
+              disabled={isLoading || !casa.trim() || !ap.trim()}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-                ${isLoading || !complemento.trim()
+                ${isLoading ||  !casa.trim() || !ap.trim()
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                   : 'bg-red-600 hover:bg-red-700 text-white'}
               `}

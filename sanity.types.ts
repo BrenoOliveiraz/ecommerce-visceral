@@ -13,6 +13,37 @@
  */
 
 // Source: schema.json
+export type Preorder = {
+  _id: string;
+  _type: "preorder";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderNumber?: string;
+  clerkUserId?: string;
+  customerName?: string;
+  email?: string;
+  nomeCompleto?: string;
+  numeroContato?: string;
+  cpf?: string;
+  cep?: string;
+  endereco?: string;
+  complemento?: string;
+  frete?: number;
+  items?: Array<{
+    product?: {
+      _ref: string;
+      _type: "reference";
+      _weak?: boolean;
+      [internalGroqTypeReferenceTo]?: "product";
+    };
+    quantity?: number;
+    size?: string;
+    _type: "productWithQuantity";
+    _key: string;
+  }>;
+};
+
 export type Author = {
   _id: string;
   _type: "author";
@@ -74,12 +105,10 @@ export type Order = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  orderNumber?: string;
+  orderNumber?: number;
   mercadoPagoPreferenceId?: string;
   mercadoPagoPaymentId?: number;
   mercadoPagoPayerId?: string;
-  clerkUserId?: string;
-  customerName?: string;
   email?: string;
   cep?: string;
   endereco?: string;
@@ -395,7 +424,7 @@ export type SanityAssetSourceData = {
   url?: string;
 };
 
-export type AllSanitySchemaTypes = Author | Sale | Order | Product | Category | BlockContent | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
+export type AllSanitySchemaTypes = Preorder | Author | Sale | Order | Product | Category | BlockContent | SanityImagePaletteSwatch | SanityImagePalette | SanityImageDimensions | SanityImageHotspot | SanityImageCrop | SanityFileAsset | SanityImageAsset | SanityImageMetadata | Geopoint | Slug | SanityAssetSourceData;
 export declare const internalGroqTypeReferenceTo: unique symbol;
 // Source: ./sanity/lib/orders/getMyOrders.ts
 // Variable: MY_ORDERS_QUERY
@@ -406,12 +435,10 @@ export type MY_ORDERS_QUERYResult = Array<{
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  orderNumber?: string;
+  orderNumber?: number;
   mercadoPagoPreferenceId?: string;
   mercadoPagoPaymentId?: number;
   mercadoPagoPayerId?: string;
-  clerkUserId?: string;
-  customerName?: string;
   email?: string;
   cep?: string;
   endereco?: string;
