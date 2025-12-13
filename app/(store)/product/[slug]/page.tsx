@@ -1,5 +1,5 @@
 import ProductSizeSelector from "@/components/ProductSizeSelector";
-import SizeChartModal from "@/components/sizeChart";
+
 
 
 import { getProductBySlug } from "@/sanity/lib/products/getProductBySlug";
@@ -26,6 +26,8 @@ export default async function ProductPage({
   const stockP = product.stockP ?? 0;
   const stockM = product.stockM ?? 0;
   const stockG = product.stockG ?? 0;
+  const stockGG = product.stockGG ?? 0;
+  const stockXG = product.stockXG ?? 0;
   const isOutOfStock = stockP <= 0 && stockM <= 0 && stockG <= 0;
 
   return (
@@ -71,17 +73,15 @@ export default async function ProductPage({
             {/* Aviso de pré-venda */}
             <div className="mt-10 bg-red-950 border-l-4 border-yellow-500 text-white p-5 rounded-lg text-sm leading-relaxed shadow-sm">
               <p>
-                Observe que as <strong>pré-vendas</strong> ficarão disponíveis por um período de{" "}
-                <strong>5 dias</strong> e, após o encerramento das vendas, o envio ocorre em até{" "}
-                <strong>10 dias úteis</strong>.
+                "Envio ocorre em até{" "}
+              {" "}
+                <strong>10 dias uteis após o pagamento</strong>.
               </p>
               <p className="mt-3">
                 Por favor, leia isto antes de fazer o pedido. Obrigado.
               </p>
-              <p className="mt-3 font-medium">
-                Envios da pré-venda iniciam-se a partir do dia{" "}
-                <strong>16 de Dezembro</strong>.
-              </p>
+
+   
             </div>
           </div>
 
@@ -90,6 +90,8 @@ export default async function ProductPage({
             stockP={stockP}
             stockM={stockM}
             stockG={stockG}
+            stockGG={stockGG}
+            stockXG={stockXG}
             isOutOfStock={isOutOfStock}
             product={product}
           />

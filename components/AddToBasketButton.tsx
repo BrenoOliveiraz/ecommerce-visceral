@@ -7,7 +7,7 @@ import {  ShoppingCart } from "lucide-react";
 
 interface AddToBasketButtonProps {
   product: Product;
-  size?: "P" | "M" | "G" | null;
+  size?: "P" | "M" | "G" |"GG" | "XG" | null;
   stock?: number;
   disabled?: boolean;
 }

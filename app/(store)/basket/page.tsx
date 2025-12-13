@@ -25,7 +25,7 @@ export type Metadata = {
   numeroContato: string;
 };
 
-export type Size = 'P' | 'M' | 'G' | undefined;
+export type Size = 'P' | 'M' | 'G' | 'GG' | 'XG' | undefined;
 
 interface BasketItem {
   product: Product;
@@ -41,7 +41,7 @@ export default function BasketPage() {
   const router = useRouter();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [valorFrete, setValorFrete] = useState(0);
+  const [valorFrete, setValorFrete] = useState<number | null>(null);
   const [cep, setCep] = useState("");
   const [endereco, setEndereco] = useState<string | null>(null);
   const [cpf, setCpf] = useState("");
@@ -49,7 +49,7 @@ export default function BasketPage() {
   const [numeroContato, setNumeroContato] = useState("");
   const [ap, setAp] = useState('');
   const [casa, setCasa] = useState('')
-  
+
 
   useEffect(() => {
     setIsClient(true);
@@ -66,46 +66,51 @@ export default function BasketPage() {
     );
   }
 
-const handleCheckout = async () => {
-  if (!isSignedIn) return;
+  const handleCheckout = async () => {
+    if (!isSignedIn) return;
 
-  const complementoAtual = casa + " Ap/Casa " + ap; // monta localmente
-
-  if (!complementoAtual.trim()) {
-    alert("Por favor, preencha o número / complemento.");
-    return;
-  }
-
-  setIsLoading(true);
-  try {
-    const metadata: Metadata = {
-      orderNumber: crypto.randomUUID(),
-      customerName: user?.fullName ?? 'Unknown',
-      customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
-      clerkUserId: user!.id,
-      cep,
-      endereco: endereco ?? "Não informado",
-      complemento: complementoAtual,
-      cpf,
-      nomeCompleto,
-      numeroContato
-    };
-
-    const checkoutUrl = await createMercadoPagoCheckout(
-      groupedItems,
-      metadata,
-      valorFrete
-    );
-
-    if (checkoutUrl) {
-      window.location.href = checkoutUrl;
+    if (valorFrete === null) {
+      alert("Por favor, selecione um frete antes de continuar.");
+      return;
     }
-  } catch (error) {
-    console.error('Error creating checkout session', error);
-  } finally {
-    setIsLoading(false);
-  }
-};
+
+    const complementoAtual = casa + " compl: " + ap;
+
+    if (!complementoAtual.trim()) {
+      alert("Por favor, preencha o número / complemento.");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const metadata: Metadata = {
+        orderNumber: crypto.randomUUID(),
+        customerName: user?.fullName ?? 'Unknown',
+        customerEmail: user?.emailAddresses[0].emailAddress ?? 'Unknown',
+        clerkUserId: user!.id,
+        cep,
+        endereco: endereco ?? "Não informado",
+        complemento: complementoAtual,
+        cpf,
+        nomeCompleto,
+        numeroContato
+      };
+
+      const checkoutUrl = await createMercadoPagoCheckout(
+        groupedItems,
+        metadata,
+        valorFrete
+      );
+
+      if (checkoutUrl) {
+        window.location.href = checkoutUrl;
+      }
+    } catch (error) {
+      console.error('Error creating checkout session', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
 
   const getStockForSize = (product: Product, size?: Size): number => {
@@ -113,12 +118,15 @@ const handleCheckout = async () => {
       case 'P': return product.stockP ?? 0;
       case 'M': return product.stockM ?? 0;
       case 'G': return product.stockG ?? 0;
+      case 'GG': return product.stockGG ?? 0;
+      case 'XG': return product.stockXG ?? 0;
       default: return 0;
     }
   };
 
   const totalProdutos = useBasketStore.getState().getTotalPrice();
-  const totalGeral = totalProdutos + (valorFrete > 0 ? valorFrete : 0);
+  const totalGeral = totalProdutos + (valorFrete ?? 0);
+
 
   return (
     <div className="container mx-auto p-4 max-w-6xl">
@@ -215,7 +223,7 @@ const handleCheckout = async () => {
               Nome Completo
             </label>
             <input
-              
+
               id="nomecompleto"
               type="text"
               value={nomeCompleto}
@@ -237,7 +245,7 @@ const handleCheckout = async () => {
             /> */}
 
             <label className="text-gray-200 font-medium mt-6" htmlFor="casa">
-              Número / Apartamento
+              Número / Complemento
             </label>
             <div className="flex items-center space-x-2">
               <input
@@ -284,7 +292,7 @@ const handleCheckout = async () => {
                 setEndereco(en);
                 setCep(ce);
               }}
-          
+
             />
           </div>
 
@@ -301,7 +309,11 @@ const handleCheckout = async () => {
 
             <p className="flex justify-between">
               <span>Frete:</span>
-              <span>R${valorFrete.toFixed(2)}</span>
+              <span>
+                {valorFrete === null
+                  ? <span className="text-yellow-400">Selecione o frete</span>
+                  : `R$${valorFrete.toFixed(2)}`}
+              </span>
             </p>
 
             <p className="flex justify-between text-2xl font-bold border-t border-gray-700 pt-2 text-red-500">
@@ -315,12 +327,12 @@ const handleCheckout = async () => {
           {isSignedIn ? (
             <button
               onClick={handleCheckout}
-              disabled={isLoading || !casa.trim() || !ap.trim()}
+              disabled={isLoading || !casa.trim() || valorFrete === null}
               className={`mt-4 w-full px-4 py-2 rounded-lg transition-colors
-                ${isLoading ||  !casa.trim() || !ap.trim()
+    ${isLoading || !casa.trim() || valorFrete === null
                   ? 'bg-gray-700 text-gray-400 cursor-not-allowed'
                   : 'bg-red-600 hover:bg-red-700 text-white'}
-              `}
+  `}
             >
               {isLoading ? "Processando..." : "Finalizar compra"}
             </button>

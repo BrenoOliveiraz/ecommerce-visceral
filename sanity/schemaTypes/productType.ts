@@ -78,6 +78,16 @@ export const productType = defineType({
       title: 'Stock G',
       type: 'number',
     }),
+    defineField({
+      name: 'stockGG',
+      title: 'Stock GG',
+      type: 'number',
+    }),
+    defineField({
+      name: 'stockXG',
+      title: 'Stock XG',
+      type: 'number',
+    }),
   ],
   preview: {
     select: {

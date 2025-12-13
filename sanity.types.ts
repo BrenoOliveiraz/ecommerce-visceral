@@ -261,6 +261,8 @@ export type Product = {
   stockP?: number;
   stockM?: number;
   stockG?: number;
+  stockGG?: number;
+  stockXG?: number;
 };
 
 export type Category = {
@@ -573,6 +575,8 @@ export type MY_ORDERS_QUERYResult = Array<{
       stockP?: number;
       stockM?: number;
       stockG?: number;
+      stockGG?: number;
+      stockXG?: number;
     } | null;
     quantity?: number;
     size?: string;
@@ -729,6 +733,8 @@ export type ALL_PRODUCTS_QUERYResult = Array<{
   stockP?: number;
   stockM?: number;
   stockG?: number;
+  stockGG?: number;
+  stockXG?: number;
 }>;
 
 // Source: ./sanity/lib/products/getProductByCategory.ts
@@ -860,6 +866,8 @@ export type PRODUCTS_BY_CATEGORY_QUERYResult = Array<{
   stockP?: number;
   stockM?: number;
   stockG?: number;
+  stockGG?: number;
+  stockXG?: number;
 }>;
 
 // Source: ./sanity/lib/products/getProductBySlug.ts
@@ -991,6 +999,8 @@ export type PRODUCT_BY_ID_QUERYResult = {
   stockP?: number;
   stockM?: number;
   stockG?: number;
+  stockGG?: number;
+  stockXG?: number;
 } | null;
 
 // Source: ./sanity/lib/products/searchProductsByName.ts
@@ -1122,6 +1132,8 @@ export type PRODUCT_SEARCH_QUERYResult = Array<{
   stockP?: number;
   stockM?: number;
   stockG?: number;
+  stockGG?: number;
+  stockXG?: number;
 }>;
 
 // Query TypeMap

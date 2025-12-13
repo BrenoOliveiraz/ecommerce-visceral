@@ -6,7 +6,7 @@ import { Product } from "@/sanity.types";
 
 interface AddToBasketButtonProps {
   product: Product;
-  size?: "P" | "M" | "G" | null;
+  size?: "P" | "M" | "G" | "GG" | "XG" | null;
   stock?: number;
   disabled?: boolean;
 }

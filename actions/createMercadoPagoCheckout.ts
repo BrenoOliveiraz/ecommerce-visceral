@@ -20,7 +20,7 @@ export type Metadata = {
 export type GroupBasketItem = {
   product: BasketItem['product']
   quantity: number
-  size?: 'P' | 'M' | 'G' | undefined
+  size?: 'P' | 'M' | 'G' |'GG' | 'XG' | undefined
 }
 
 export async function createMercadoPagoCheckout(

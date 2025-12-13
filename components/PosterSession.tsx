@@ -18,7 +18,7 @@ export default function Poster() {
           <div className="relative bg-amber-200 rounded-lg border-4 border-red-700/40 shadow-lg shadow-red-600/50 overflow-hidden transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-[550px]">
               <Image
-                src="/poster-1.jpg"
+                src="/POSTER.jpg"
                 alt="Poster Todo Mundo"
                 fill
                 className="object-cover"
@@ -44,7 +44,7 @@ export default function Poster() {
           <div className="relative bg-amber-200 rounded-lg border-4 border-red-700/40 shadow-lg shadow-red-600/50 overflow-hidden transition-all duration-300 hover:scale-105">
             <div className="relative w-full h-[550px]">
               <Image
-                src="/poster-3.jpg"
+                src="/POSTER2.jpg"
                 alt="Poster Cara"
                 fill
                 className="object-cover"

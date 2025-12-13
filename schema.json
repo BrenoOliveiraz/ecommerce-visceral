@@ -1757,6 +1757,20 @@
           "type": "number"
         },
         "optional": true
+      },
+      "stockGG": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
+      },
+      "stockXG": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "number"
+        },
+        "optional": true
       }
     }
   },

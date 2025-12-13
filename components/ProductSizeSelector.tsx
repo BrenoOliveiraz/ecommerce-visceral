@@ -8,6 +8,8 @@ interface ProductSizeSelectorProps {
   stockP: number;
   stockM: number;
   stockG: number;
+  stockGG: number;
+  stockXG: number;
   isOutOfStock: boolean;
   product: Product;
 }
@@ -16,13 +18,15 @@ export default function ProductSizeSelector({
   stockP,
   stockM,
   stockG,
+  stockGG,
+  stockXG,
   isOutOfStock,
   product,
 }: ProductSizeSelectorProps) {
-  const [selectedSize, setSelectedSize] = useState<"P" | "M" | "G" | null>(null);
+  const [selectedSize, setSelectedSize] = useState<"P" | "M" | "G" | "GG" | "XG" | null>(null);
   const [selectedStock, setSelectedStock] = useState(0);
 
-  const handleSelectSize = (size: "P" | "M" | "G") => {
+  const handleSelectSize = (size: "P" | "M" | "G" | "GG" | "XG") => {
     setSelectedSize(size);
     switch (size) {
       case "P":
@@ -34,6 +38,12 @@ export default function ProductSizeSelector({
       case "G":
         setSelectedStock(stockG);
         break;
+      case "GG":
+        setSelectedStock(stockGG);
+        break;
+      case "XG":
+        setSelectedStock(stockXG);
+        break;
       default:
         setSelectedStock(0);
     }
@@ -41,21 +51,25 @@ export default function ProductSizeSelector({
 
   return (
     <div className="mt-8">
-      {/* Seletor de tamanhos */}
+
       <div className="flex gap-3 mb-6">
-        {["P", "M", "G"].map((size) => {
+        {["P", "M", "G", "GG", "XG"].map((size) => {
           const stock =
-            size === "P" ? stockP : size === "M" ? stockM : stockG;
+            size === "P" ? stockP :
+              size === "M" ? stockM :
+                size === "G" ? stockG :
+                  size === "GG" ? stockGG :
+                    stockXG;
           const isDisabled = stock <= 0;
 
           return (
             <button
               key={size}
               disabled={isDisabled}
-              onClick={() => handleSelectSize(size as "P" | "M" | "G")}
+              onClick={() => handleSelectSize(size as "P" | "M" | "G" | "GG" | "XG")}
               className={`px-4 py-2 rounded-md border ${selectedSize === size
-                  ? "bg-red-600 text-white border-red-700"
-                  : "bg-zinc-800 text-gray-200 border-gray-600"
+                ? "bg-red-600 text-white border-red-700"
+                : "bg-zinc-800 text-gray-200 border-gray-600"
                 } ${isDisabled ? "opacity-50 cursor-not-allowed" : "hover:bg-red-700"
                 }`}
             >
