@@ -25,7 +25,7 @@ interface CalculoFreteProps {
 }
 
 export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplementoChange }: CalculoFreteProps) {
-  const fromCep = "62508250";
+  const fromCep = "60410437";
 
   const [toCep, setToCep] = useState("");
   const [endereco, setEndereco] = useState<string | null>(null);

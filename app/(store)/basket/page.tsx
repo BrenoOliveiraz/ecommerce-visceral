@@ -322,7 +322,6 @@ export default function BasketPage() {
             </p>
           </div>
 
-          {/* ❌ Removida a trava do frete obrigatório */}
 
           {isSignedIn ? (
             <button
