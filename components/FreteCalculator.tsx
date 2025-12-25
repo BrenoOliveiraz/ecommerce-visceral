@@ -71,12 +71,23 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
       if (data.error) {
         setErro(data.error);
       } else if (Array.isArray(data)) {
-        const opcoesValidas = data.filter(
-          (item: FreteOption) =>
-            !item.error &&
-            item.price &&
-            item.company.name.toLowerCase().includes("correios")
-        );
+        const opcoesValidas = data
+          .filter(
+            (item: FreteOption) =>
+              !item.error &&
+              item.price &&
+              item.company.name.toLowerCase().includes("correios")
+          )
+          .map((item: FreteOption) => {
+            const preco = parseFloat(item.price);
+            const precoAjustado = preco === 20 ? preco + 15 : preco;
+
+            return {
+              ...item,
+              price: precoAjustado.toFixed(2), 
+            };
+          });
+
         setResultado(opcoesValidas);
       } else {
         setErro("Erro inesperado no retorno da API");
@@ -129,6 +140,8 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
       <div className="space-y-4">
         {resultado.map((item) => {
           const valor = parseFloat(item.price);
+
+
           return (
             <div
               key={item.id}
