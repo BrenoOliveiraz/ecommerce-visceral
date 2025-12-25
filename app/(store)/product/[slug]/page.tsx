@@ -75,7 +75,7 @@ export default async function ProductPage({
               <p>
                 "Envio ocorre em até{" "}
               {" "}
-                <strong>10 dias uteis após o pagamento</strong>.
+                <strong>15 dias uteis após o pagamento</strong>.
               </p>
               <p className="mt-3">
                 Por favor, leia isto antes de fazer o pedido. Obrigado.
