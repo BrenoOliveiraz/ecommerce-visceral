@@ -33,7 +33,7 @@ export default async function ProductPage({
   return (
     <div className="container mx-auto px-4 py-10">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-        
+
         {/* Galeria com miniaturas */}
         <ProductGallery
           images={product.images || []}
@@ -67,21 +67,23 @@ export default async function ProductPage({
               Design por — {product.design}
             </p>
 
-           
+
             {/* <SizeChartModal /> */}
 
             {/* Aviso de pré-venda */}
             <div className="mt-10 bg-red-950 border-l-4 border-yellow-500 text-white p-5 rounded-lg text-sm leading-relaxed shadow-sm">
               <p>
                 "Envio ocorre em até{" "}
-              {" "}
+                {" "}
                 <strong>15 dias uteis após o pagamento</strong>.
               </p>
               <p className="mt-3">
-                Por favor, leia isto antes de fazer o pedido. Obrigado.
+                Prazos de Envio:
+
+                Produtos em pré-venda têm prazos longos e variados. Compras comuns são postadas em até 15 dias úteis após confirmação do pagamento (boleto, cartão ou pix). Após postagem, começam a contar os prazos dos Correios: SEDEX (2–9 dias úteis) ou PAC (7–20 dias úteis). Os prazos podem variar conforme a distância.
               </p>
 
-   
+
             </div>
           </div>
 

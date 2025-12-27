@@ -80,11 +80,11 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
           )
           .map((item: FreteOption) => {
             const preco = parseFloat(item.price);
-            const precoAjustado = preco === 20 ? preco + 15 : preco;
+            const precoAjustado = preco < 35 ? 35 : preco;
 
             return {
               ...item,
-              price: precoAjustado.toFixed(2), 
+              price: precoAjustado.toFixed(2),
             };
           });
 
@@ -123,7 +123,7 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
         {/* Campo para CEP */}
         <BuscaCep onCepEncontrado={handleCepEncontrado} />
 
-        {/* Botão para calcular frete */}
+
         <button
           onClick={calcularFrete}
           disabled={loading || toCep.length !== 8}
