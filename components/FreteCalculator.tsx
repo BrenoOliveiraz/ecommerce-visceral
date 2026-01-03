@@ -80,7 +80,8 @@ export default function CalculoFrete({ onSelectFrete, onCepEncontrado, onComplem
           )
           .map((item: FreteOption) => {
             const preco = parseFloat(item.price);
-            const precoAjustado = preco < 35 ? 35 : preco;
+            const precoAjustado = preco + 2
+            //  < 35 ? 35 : preco;
 
             return {
               ...item,

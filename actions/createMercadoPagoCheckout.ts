@@ -78,6 +78,7 @@ export async function createMercadoPagoCheckout(
 
   // external reference com dados do cliente
   const externalRef = JSON.stringify({
+    
     // orderNumber: metadata.orderNumber,
     cep: metadata.cep,
     endereco: metadata.endereco,
@@ -88,6 +89,12 @@ export async function createMercadoPagoCheckout(
     // clerkUserId: metadata.clerkUserId,
     // customerName: metadata.customerName,
     customerEmail: metadata.customerEmail,
+      items: items.map(item => ({
+  
+    size: item.size,
+    quantity: item.quantity,}))
+    
+    
   });
 
   const response = await preference.create({
